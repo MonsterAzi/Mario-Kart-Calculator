@@ -56,29 +56,26 @@
 
         /* --- Panel & Layout Styles --- */
         .panel {
-            background-image:
-                /* Layer 1: The arrow pattern */
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='60' viewBox='0 0 25 60'%3E%3Cpolyline points='8,8 12,8 18,20 8,32 12,32 14,20 8,8' stroke='none' fill='%233a3a3a'/%3E%3C/svg%3E"),
-                /* Layer 2: The solid gray header color */
-                linear-gradient(var(--header-bg), var(--header-bg));
+            background-image: linear-gradient(
+                transparent 92px, /* Transparent for the top 92px */
+                var(--panel-bg) 92px  /* Solid white for the rest */
+            );
             
-            background-repeat: repeat-x, no-repeat;
-            background-position: center top, top left;
-        
-            background-size: auto, 100% 92px;
-        
-            background-color: var(--panel-bg);
             color: var(--text-dark);
             border-radius: 48px;
             margin-bottom: 40px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         .panel-header {
-            height: 92px;
-            box-sizing: border-box;
-            
+            /* RESTORE its own background properties */
+            background-color: var(--header-bg);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='60' viewBox='0 0 25 60'%3E%3Cpolyline points='8,8 12,8 18,20 12,32 8,32 14,20 8,8' stroke='none' fill='%233a3a3a'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-position: center;
+        
+            /* These are still good practice */
             padding: 15px 25px;
             border-top-left-radius: inherit;
             border-top-right-radius: inherit;
