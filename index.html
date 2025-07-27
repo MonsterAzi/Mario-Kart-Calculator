@@ -13,19 +13,21 @@
     <style>
         /* --- Global Styles & Theme --- */
         :root {
-            --dark-bg: #2c3e50;
-            --panel-bg: rgba(23, 32, 42, 0.85);
-            --border-glow: #5dade2;
+            --page-bg: #2c3e50;
+            --panel-bg: #ffffff;
+            --header-bg: #e9ecef;
+            --header-arrows-dark: #343a40;
+            --text-dark: #212529;
             --text-light: #ecf0f1;
-            --text-dark: #34495e;
             --accent-gold: #f1c40f;
             --button-bg: #3498db;
+            --fieldset-bg: #f8f9fa;
         }
 
         body {
             font-family: 'Lexend', sans-serif;
             line-height: 1.6;
-            background-color: var(--dark-bg);
+            background-color: var(--page-bg);
             color: var(--text-light);
             margin: 0;
             padding: 20px;
@@ -33,64 +35,78 @@
 
         main {
             max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1, h2 {
-            text-align: center;
-            font-weight: 700;
+            margin: 20px auto;
         }
 
         h1 {
             font-size: 2.5em;
             color: var(--accent-gold);
+            text-align: center;
+            font-weight: 700;
             text-shadow: 0 0 8px rgba(241, 196, 15, 0.3);
             margin-bottom: 10px;
         }
         
-        h2 {
-            color: var(--border-glow);
-            margin-top: 0;
-        }
-
-        p {
+        p.subtitle {
             text-align: center;
             color: #bdc3c7;
             max-width: 800px;
-            margin: 0 auto 30px auto;
+            margin: 0 auto 40px auto;
         }
 
         /* --- Panel & Layout Styles --- */
         .panel {
             background-color: var(--panel-bg);
-            border: 2px solid var(--border-glow);
-            border-radius: 12px;
+            color: var(--text-dark);
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden; /* Important for rounding corners of the header */
+        }
+
+        .panel-header {
+            background-color: var(--header-bg);
+            /* SVG background for the arrows */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill-rule='evenodd' d='M0 40L20 20L0 0h10l20 20l-20 20H0z' fill='%23343a40' fill-opacity='0.4'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-position: center;
+            padding: 15px 25px;
+        }
+
+        .panel-header h2 {
+            color: var(--accent-gold);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            font-size: 1.8em;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .panel-content {
             padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(93, 173, 226, 0.15);
-            backdrop-filter: blur(5px);
         }
 
         /* --- Controls & Form Elements --- */
-        #controls {
+        #controls-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
+            margin-bottom: 25px;
         }
 
         fieldset {
-            border: none;
-            padding: 0;
-            margin: 0;
+            background: var(--fieldset-bg);
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
         }
 
         legend {
             font-weight: 700;
-            font-size: 1.2em;
-            color: var(--border-glow);
-            padding-bottom: 15px;
-            width: 100%;
-            text-align: center;
+            font-size: 1.1em;
+            color: var(--text-dark);
+            padding: 0 10px;
+            margin-left: 5px;
+            margin-bottom: 10px;
         }
 
         .input-group {
@@ -98,7 +114,7 @@
             align-items: center;
             margin-bottom: 12px;
         }
-
+        
         .input-group label {
             flex: 1;
             min-width: 140px;
@@ -108,9 +124,9 @@
             font-family: 'Lexend', sans-serif;
             width: 70px;
             padding: 8px;
-            background-color: var(--dark-bg);
-            border: 1px solid var(--border-glow);
-            color: var(--text-light);
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            color: var(--text-dark);
             border-radius: 5px;
             text-align: right;
             font-size: 1em;
@@ -118,11 +134,10 @@
 
         .input-group span {
             margin-left: 8px;
-            color: #95a5a6;
         }
 
         #calculate-btn {
-            grid-column: 1 / -1; /* Span all columns */
+            width: 100%;
             padding: 14px 20px;
             font-size: 1.3em;
             font-weight: 700;
@@ -133,12 +148,12 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
         }
-
+        
         #calculate-btn:hover {
+            background-color: #2980b9;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
 
         .validation-message {
@@ -157,46 +172,39 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
         }
 
         th, td {
-            border: 1px solid var(--dark-bg);
-            padding: 12px;
+            border: 1px solid #dee2e6;
+            padding: 12px 15px;
             text-align: center;
             vertical-align: middle;
         }
 
         th {
-            background-color: #2c3e50;
-            color: var(--border-glow);
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        tr {
-             background-color: transparent;
-             transition: background-color 0.2s ease;
+            background-color: #dee2e6;
+            color: var(--text-dark);
+            font-weight: 700;
+            white-space: pre;
         }
 
-        tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.2);
+        tbody tr:nth-child(even) {
+            background-color: var(--fieldset-bg);
         }
 
-        tr:hover {
-            background-color: rgba(93, 173, 226, 0.1);
+        tbody tr:hover {
+            background-color: #e9ecef;
         }
 
         .score-col {
             font-weight: bold;
             font-size: 1.1em;
-            background-color: rgba(241, 196, 15, 0.15);
-            color: var(--accent-gold);
+            background-color: #fff9e6;
+            color: #b38600;
         }
 
         .char-col, .kart-col {
-             white-space: pre-wrap; /* Allows line breaks in names */
+             white-space: pre-wrap;
              text-align: left;
              min-width: 150px;
         }
@@ -205,78 +213,89 @@
 <body>
     <main>
         <h1>Mario Kart World Combo Calculator</h1>
-        <p>Set the percentage weights for each stat to find the best character and kart combinations. Main stats and sub-stats must each add up to 100%. The total score is calculated based on your preferences.</p>
+        <p class="subtitle">Set the percentage weights for each stat to find the best character and kart combinations. Main stats and sub-stats must each add up to 100%. The total score is calculated based on your preferences.</p>
 
-        <div id="controls" class="panel">
-            <fieldset>
-                <legend>Main Stat Weights</legend>
-                <div class="input-group">
-                    <label for="weight-speed">Speed</label>
-                    <input type="number" id="weight-speed" value="30" min="0" max="100"><span>%</span>
-                </div>
-                <div class="input-group">
-                    <label for="weight-accel">Accel & M-Turbo</label>
-                    <input type="number" id="weight-accel" value="30" min="0" max="100"><span>%</span>
-                </div>
-                <div class="input-group">
-                    <label for="weight-weight">Weight & Coins</label>
-                    <input type="number" id="weight-weight" value="10" min="0" max="100"><span>%</span>
-                </div>
-                <div class="input-group">
-                    <label for="weight-handling">Handling</label>
-                    <input type="number" id="weight-handling" value="30" min="0" max="100"><span>%</span>
-                </div>
-                <div id="main-validation" class="validation-message"></div>
-            </fieldset>
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Controls</h2>
+            </div>
+            <div class="panel-content">
+                <div id="controls-grid">
+                    <fieldset>
+                        <legend>Main Stat Weights</legend>
+                        <div class="input-group">
+                            <label for="weight-speed">Speed</label>
+                            <input type="number" id="weight-speed" value="30" min="0" max="100"><span>%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="weight-accel">Accel & Mini-Turbo</label>
+                            <input type="number" id="weight-accel" value="30" min="0" max="100"><span>%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="weight-weight">Weight & Coins</label>
+                            <input type="number" id="weight-weight" value="10" min="0" max="100"><span>%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="weight-handling">Handling</label>
+                            <input type="number" id="weight-handling" value="30" min="0" max="100"><span>%</span>
+                        </div>
+                        <div id="main-validation" class="validation-message"></div>
+                    </fieldset>
 
-            <fieldset>
-                <legend>Speed Sub-Stat Weights</legend>
-                <div class="input-group">
-                    <label for="sub-solid-speed">Solid Speed</label>
-                    <input type="number" id="sub-solid-speed" value="50" min="0" max="100"><span>%</span>
-                </div>
-                <div class="input-group">
-                    <label for="sub-coarse-speed">Coarse Speed</label>
-                    <input type="number" id="sub-coarse-speed" value="30" min="0" max="100"><span>%</span>
-                </div>
-                <div class="input-group">
-                    <label for="sub-liquid-speed">Liquid Speed</label>
-                    <input type="number" id="sub-liquid-speed" value="20" min="0" max="100"><span>%</span>
-                </div>
-                <div id="speed-validation" class="validation-message"></div>
-            </fieldset>
+                    <fieldset>
+                        <legend>Speed Sub-Stat Weights</legend>
+                        <div class="input-group">
+                            <label for="sub-solid-speed">Solid Speed</label>
+                            <input type="number" id="sub-solid-speed" value="50" min="0" max="100"><span>%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="sub-coarse-speed">Coarse Speed</label>
+                            <input type="number" id="sub-coarse-speed" value="30" min="0" max="100"><span>%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="sub-liquid-speed">Liquid Speed</label>
+                            <input type="number" id="sub-liquid-speed" value="20" min="0" max="100"><span>%</span>
+                        </div>
+                        <div id="speed-validation" class="validation-message"></div>
+                    </fieldset>
 
-            <fieldset>
-                <legend>Handling Sub-Stat Weights</legend>
-                <div class="input-group">
-                    <label for="sub-solid-handling">Solid Handling</label>
-                    <input type="number" id="sub-solid-handling" value="50" min="0" max="100"><span>%</span>
+                    <fieldset>
+                        <legend>Handling Sub-Stat Weights</legend>
+                        <div class="input-group">
+                            <label for="sub-solid-handling">Solid Handling</label>
+                            <input type="number" id="sub-solid-handling" value="50" min="0" max="100"><span>%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="sub-coarse-handling">Coarse Handling</label>
+                            <input type="number" id="sub-coarse-handling" value="30" min="0" max="100"><span>%</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="sub-liquid-handling">Liquid Handling</label>
+                            <input type="number" id="sub-liquid-handling" value="20" min="0" max="100"><span>%</span>
+                        </div>
+                        <div id="handling-validation" class="validation-message"></div>
+                    </fieldset>
                 </div>
-                <div class="input-group">
-                    <label for="sub-coarse-handling">Coarse Handling</label>
-                    <input type="number" id="sub-coarse-handling" value="30" min="0" max="100"><span>%</span>
-                </div>
-                <div class="input-group">
-                    <label for="sub-liquid-handling">Liquid Handling</label>
-                    <input type="number" id="sub-liquid-handling" value="20" min="0" max="100"><span>%</span>
-                </div>
-                <div id="handling-validation" class="validation-message"></div>
-            </fieldset>
-
-            <button id="calculate-btn">Find Best Combos</button>
+                <button id="calculate-btn">Find Best Combos</button>
+            </div>
         </div>
 
-        <div id="results-container" class="panel">
-            <h2>Results</h2>
-            <div id="results-table">
-                <p>Adjust the weights above and click the button to see the results.</p>
+        <div class="panel">
+            <div class="panel-header">
+                <h2>Results</h2>
+            </div>
+            <div class="panel-content">
+                <div id="results-container">
+                    <div id="results-table">
+                        <p>Adjust the weights above and click the button to see the results.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
     <script>
-        // --- DATA ---
-        // Data is hardcoded from your CSVs for simplicity and to avoid file loading issues.
+        // --- DATA (Unchanged) ---
         const characterData = [
             { name: "Baby Peach\nBaby Daisy\nSwooper\nPara-Biddybud", solidSpeed: 0, coarseSpeed: 0, liquidSpeed: 0, accel: 7, weight: 0, solidHandling: 6, coarseHandling: 6, liquidHandling: 6 },
             { name: "Baby Mario\nGoomba\nSpike", solidSpeed: 1, coarseSpeed: 0, liquidSpeed: 0, accel: 6, weight: 1, solidHandling: 7, coarseHandling: 5, liquidHandling: 5 },
@@ -327,11 +346,10 @@
             { name: "Stellar Sled", solidSpeed: 6, coarseSpeed: 8, liquidSpeed: 11, accel: 0, weight: 5, solidHandling: 1, coarseHandling: 2, liquidHandling: 8 }
         ];
 
-        // --- DOM Elements ---
+        // --- SCRIPT LOGIC (Unchanged, except for table generation) ---
         const calculateBtn = document.getElementById('calculate-btn');
         const resultsTableDiv = document.getElementById('results-table');
         
-        // --- Event Listener ---
         calculateBtn.addEventListener('click', calculateAndDisplayCombos);
 
         function getInputValue(id) {
@@ -341,7 +359,6 @@
         function validateWeights(ids, validationDivId) {
             const sum = ids.reduce((total, id) => total + getInputValue(id), 0);
             const validationDiv = document.getElementById(validationDivId);
-            // Use a small tolerance for floating point issues
             if (Math.abs(sum - 100) > 0.1) {
                 validationDiv.textContent = `Error: Weights must add up to 100%. Current sum is ${sum.toFixed(1)}%.`;
                 validationDiv.style.display = 'block';
@@ -352,72 +369,54 @@
         }
 
         function calculateAndDisplayCombos() {
-            // --- 1. Validate Inputs ---
             const isMainValid = validateWeights(['weight-speed', 'weight-accel', 'weight-weight', 'weight-handling'], 'main-validation');
             const isSpeedValid = validateWeights(['sub-solid-speed', 'sub-coarse-speed', 'sub-liquid-speed'], 'speed-validation');
             const isHandlingValid = validateWeights(['sub-solid-handling', 'sub-coarse-handling', 'sub-liquid-handling'], 'handling-validation');
 
             if (!isMainValid || !isSpeedValid || !isHandlingValid) {
-                resultsTableDiv.innerHTML = `<p style="color: #e74c3c;">Please fix the errors in the weight percentages above.</p>`;
+                resultsTableDiv.innerHTML = `<p style="color: #e74c3c; text-align: center;">Please fix the errors in the weight percentages above.</p>`;
                 return;
             }
             
-            // --- 2. Get All Weights ---
             const weights = {
                 speed: getInputValue('weight-speed') / 100,
                 accel: getInputValue('weight-accel') / 100,
                 weight: getInputValue('weight-weight') / 100,
                 handling: getInputValue('weight-handling') / 100,
-                
                 subSolidSpeed: getInputValue('sub-solid-speed') / 100,
                 subCoarseSpeed: getInputValue('sub-coarse-speed') / 100,
                 subLiquidSpeed: getInputValue('sub-liquid-speed') / 100,
-
                 subSolidHandling: getInputValue('sub-solid-handling') / 100,
                 subCoarseHandling: getInputValue('sub-coarse-handling') / 100,
                 subLiquidHandling: getInputValue('sub-liquid-handling') / 100,
             };
 
-            // --- 3. Calculate all combinations and scores ---
             const allCombos = [];
             for (const char of characterData) {
                 for (const kart of kartData) {
-                    // Combine stats
                     const combo = {
                         charName: char.name,
                         kartName: kart.name,
                         solidSpeed: char.solidSpeed + kart.solidSpeed,
                         coarseSpeed: char.coarseSpeed + kart.coarseSpeed,
                         liquidSpeed: char.liquidSpeed + kart.liquidSpeed,
-                        accel: char.accel + (kart.accel || 0), // Handle null kart accel
-                        weight: char.weight + (kart.weight || 0), // Handle null kart weight
+                        accel: char.accel + (kart.accel || 0),
+                        weight: char.weight + (kart.weight || 0),
                         solidHandling: char.solidHandling + kart.solidHandling,
                         coarseHandling: char.coarseHandling + kart.coarseHandling,
                         liquidHandling: char.liquidHandling + kart.liquidHandling,
                     };
 
-                    // Calculate score based on weights
-                    const speedScore = (combo.solidSpeed * weights.subSolidSpeed) +
-                                       (combo.coarseSpeed * weights.subCoarseSpeed) +
-                                       (combo.liquidSpeed * weights.subLiquidSpeed);
-
-                    const handlingScore = (combo.solidHandling * weights.subSolidHandling) +
-                                          (combo.coarseHandling * weights.subCoarseHandling) +
-                                          (combo.liquidHandling * weights.subLiquidHandling);
-
-                    combo.totalScore = (speedScore * weights.speed) +
-                                       (handlingScore * weights.handling) +
-                                       (combo.accel * weights.accel) +
-                                       (combo.weight * weights.weight);
-
+                    const speedScore = (combo.solidSpeed * weights.subSolidSpeed) + (combo.coarseSpeed * weights.subCoarseSpeed) + (combo.liquidSpeed * weights.subLiquidSpeed);
+                    const handlingScore = (combo.solidHandling * weights.subSolidHandling) + (combo.coarseHandling * weights.subCoarseHandling) + (combo.liquidHandling * weights.subLiquidHandling);
+                    combo.totalScore = (speedScore * weights.speed) + (handlingScore * weights.handling) + (combo.accel * weights.accel) + (combo.weight * weights.weight);
                     allCombos.push(combo);
                 }
             }
 
-            // --- 4. Sort combos by score (highest first) ---
             allCombos.sort((a, b) => b.totalScore - a.totalScore);
 
-            // --- 5. Generate and display the HTML table ---
+            // --- Updated Table Generation ---
             let tableHTML = `
                 <table>
                     <thead>
@@ -425,11 +424,15 @@
                             <th>Rank</th>
                             <th class="char-col">Character</th>
                             <th class="kart-col">Vehicle</th>
-                            <th class="score-col">Overall Score</th>
-                            <th>SS</th><th>CS</th><th>LS</th>
-                            <th>Ac/MT</th>
-                            <th>Wt/C</th>
-                            <th>SH</th><th>CH</th><th>LH</th>
+                            <th>Solid<br>Speed</th>
+                            <th>Coarse<br>Speed</th>
+                            <th>Liquid<br>Speed</th>
+                            <th>Accel &<br>Mini-Turbo</th>
+                            <th>Weight &<br>Coins</th>
+                            <th>Solid<br>Handling</th>
+                            <th>Coarse<br>Handling</th>
+                            <th>Liquid<br>Handling</th>
+                            <th class="score-col">Overall<br>Score</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -441,7 +444,6 @@
                         <td>${index + 1}</td>
                         <td class="char-col">${combo.charName}</td>
                         <td class="kart-col">${combo.kartName}</td>
-                        <td class="score-col">${combo.totalScore.toFixed(2)}</td>
                         <td>${combo.solidSpeed}</td>
                         <td>${combo.coarseSpeed}</td>
                         <td>${combo.liquidSpeed}</td>
@@ -450,22 +452,15 @@
                         <td>${combo.solidHandling}</td>
                         <td>${combo.coarseHandling}</td>
                         <td>${combo.liquidHandling}</td>
+                        <td class="score-col">${combo.totalScore.toFixed(2)}</td>
                     </tr>
                 `;
             });
 
-            tableHTML += `
-                    </tbody>
-                </table>
-                <p style="margin-top: 15px; font-size: 0.9em; color: #95a5a6;">
-                    <b>Key:</b> <b>SS</b>=Solid Speed, <b>CS</b>=Coarse Speed, <b>LS</b>=Liquid Speed, <b>Ac/MT</b>=Accel/M-Turbo, <b>Wt/C</b>=Weight/Coins, <b>SH</b>=Solid Handling, <b>CH</b>=Coarse Handling, <b>LH</b>=Liquid Handling.
-                </p>
-            `;
-
+            tableHTML += `</tbody></table>`;
             resultsTableDiv.innerHTML = tableHTML;
         }
 
-        // Run once on page load with default values
         document.addEventListener('DOMContentLoaded', calculateAndDisplayCombos);
     </script>
 </body>
