@@ -15,7 +15,8 @@
         :root {
             --page-bg: #2c3e50;
             --panel-bg: #ffffff;
-            --header-bg: #4d4d4d;
+            --header-bg: #4d4d4d; /* CHANGED */
+            --header-arrows-dark: #3a3a3a; /* CHANGED */
             --text-dark: #212529;
             --text-light: #ecf0f1;
             --accent-gold: #f1c40f;
@@ -60,18 +61,19 @@
             border-radius: 48px;
             margin-bottom: 40px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            overflow: hidden; /* This is the key to preventing the header spillover */
         }
 
         .panel-header {
             background-color: var(--header-bg);
-            /* --- CHANGED: New SVG for thicker, rounded-corner, closer arrows --- */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='40' viewBox='0 0 24 40'%3E%3Cpolyline points='8,2 18,20 8,38' fill='none' stroke='%233a3a3a' stroke-width='14' stroke-linejoin='round' /%3E%3C/svg%3E");
+            /* --- CHANGED: New SVG for thicker, bigger, rounded, closer arrows --- */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='40' viewBox='0 0 20 40'%3E%3Cpolyline points='8,8 18,20 8,32' stroke='%233a3a3a' stroke-width='14' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
             background-repeat: repeat-x;
             background-position: center;
             padding: 15px 25px;
-            /* --- ADDED: Fix for corner spillover --- */
-            border-radius: 48px 48px 0 0;
+            /* Ensures perfect alignment with parent's border-radius */
+            border-top-left-radius: inherit;
+            border-top-right-radius: inherit;
         }
 
         .panel-header h2 {
