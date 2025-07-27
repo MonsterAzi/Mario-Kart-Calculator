@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario Kart World - Combo Calculator</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #d92c2c;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        p {
+            text-align: center;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Controls Section */
+        #controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        legend {
+            font-weight: bold;
+            color: #333;
+            padding: 0 10px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            flex: 1;
+            min-width: 140px;
+        }
+        .input-group input {
+            width: 70px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: right;
+        }
+        .input-group span {
+            margin-left: 5px;
+        }
+        #calculate-btn {
+            grid-column: 1 / -1; /* Span all columns */
+            padding: 12px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #calculate-btn:hover {
+            background-color: #218838;
+        }
+        .validation-message {
+            color: #d92c2c;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Results Table */
+        #results-container {
+            overflow-x: auto; /* For smaller screens */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .score-col {
+            font-weight: bold;
+            background-color: #fffbeB;
+        }
+        .char-col, .kart-col {
+             white-space: pre-wrap; /* Allows line breaks in names */
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Super Mario Kart World Combo Calculator</h1>
+        <p>Set the percentage weights for each stat to find the best character and kart combinations. Main stats and sub-stats must each add up to 100%. The total score is calculated based on your preferences.</p>
+
+        <div id="controls">
+            <fieldset>
+                <legend>Main Stat Weights</legend>
+                <div class="input-group">
+                    <label for="weight-speed">Speed</label>
+                    <input type="number" id="weight-speed" value="30" min="0" max="100"><span>%</span>
+                </div>
+                <div class="input-group">
+                    <label for="weight-accel">Accel & M-Turbo</label>
+                    <input type="number" id="weight-accel" value="30" min="0" max="100"><span>%</span>
+                </div>
+                <div class="input-group">
+                    <label for="weight-weight">Weight & Coins</label>
+                    <input type="number" id="weight-weight" value="10" min="0" max="100"><span>%</span>
+                </div>
+                <div class="input-group">
+                    <label for="weight-handling">Handling</label>
+                    <input type="number" id="weight-handling" value="30" min="0" max="100"><span>%</span>
+                </div>
+                <div id="main-validation" class="validation-message"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Speed Sub-Stat Weights</legend>
+                <div class="input-group">
+                    <label for="sub-solid-speed">Solid Speed</label>
+                    <input type="number" id="sub-solid-speed" value="50" min="0" max="100"><span>%</span>
+                </div>
+                <div class="input-group">
+                    <label for="sub-coarse-speed">Coarse Speed</label>
+                    <input type="number" id="sub-coarse-speed" value="30" min="0" max="100"><span>%</span>
+                </div>
+                <div class="input-group">
+                    <label for="sub-liquid-speed">Liquid Speed</label>
+                    <input type="number" id="sub-liquid-speed" value="20" min="0" max="100"><span>%</span>
+                </div>
+                <div id="speed-validation" class="validation-message"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Handling Sub-Stat Weights</legend>
+                <div class="input-group">
+                    <label for="sub-solid-handling">Solid Handling</label>
+                    <input type="number" id="sub-solid-handling" value="50" min="0" max="100"><span>%</span>
+                </div>
+                <div class="input-group">
+                    <label for="sub-coarse-handling">Coarse Handling</label>
+                    <input type="number" id="sub-coarse-handling" value="30" min="0" max="100"><span>%</span>
+                </div>
+                <div class="input-group">
+                    <label for="sub-liquid-handling">Liquid Handling</label>
+                    <input type="number" id="sub-liquid-handling" value="20" min="0" max="100"><span>%</span>
+                </div>
+                <div id="handling-validation" class="validation-message"></div>
+            </fieldset>
+
+            <button id="calculate-btn">Find Best Combos</button>
+        </div>
+
+        <div id="results-container">
+            <h2>Results</h2>
+            <div id="results-table">
+                <p>Adjust the weights above and click the button to see the results.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- DATA ---
+        // Data is hardcoded from your CSVs for simplicity and to avoid file loading issues.
+        const characterData = [
+            { name: "Baby Peach\nBaby Daisy\nSwooper\nPara-Biddybud", solidSpeed: 0, coarseSpeed: 0, liquidSpeed: 0, accel: 7, weight: 0, solidHandling: 6, coarseHandling: 6, liquidHandling: 6 },
+            { name: "Baby Mario\nGoomba\nSpike", solidSpeed: 1, coarseSpeed: 0, liquidSpeed: 0, accel: 6, weight: 1, solidHandling: 7, coarseHandling: 5, liquidHandling: 5 },
+            { name: "Baby Luigi\nDry Bones\nPeepa", solidSpeed: 0, coarseSpeed: 1, liquidSpeed: 0, accel: 6, weight: 1, solidHandling: 5, coarseHandling: 7, liquidHandling: 5 },
+            { name: "Baby Rosalina\nSidestepper\nFishbone", solidSpeed: 0, coarseSpeed: 0, liquidSpeed: 1, accel: 6, weight: 1, solidHandling: 5, coarseHandling: 5, liquidHandling: 7 },
+            { name: "Toadette\nNabbit", solidSpeed: 2, coarseSpeed: 1, liquidSpeed: 1, accel: 5, weight: 2, solidHandling: 6, coarseHandling: 4, liquidHandling: 4 },
+            { name: "Toad\nShy Guy\nStingby", solidSpeed: 1, coarseSpeed: 2, liquidSpeed: 1, accel: 5, weight: 2, solidHandling: 4, coarseHandling: 6, liquidHandling: 4 },
+            { name: "Koopa Troopa\nLakitu\nCheep Cheep", solidSpeed: 1, coarseSpeed: 1, liquidSpeed: 2, accel: 5, weight: 2, solidHandling: 4, coarseHandling: 4, liquidHandling: 6 },
+            { name: "Peach\nDaisy\nCoin Coffer", solidSpeed: 3, coarseSpeed: 2, liquidSpeed: 2, accel: 4, weight: 3, solidHandling: 5, coarseHandling: 3, liquidHandling: 3 },
+            { name: "Yoshi\nMonty Mole", solidSpeed: 2, coarseSpeed: 3, liquidSpeed: 2, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 5, liquidHandling: 3 },
+            { name: "Bowser Jr.\nDolphin", solidSpeed: 2, coarseSpeed: 2, liquidSpeed: 3, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 3, liquidHandling: 5 },
+            { name: "Mario\nRocky Wrench", solidSpeed: 4, coarseSpeed: 3, liquidSpeed: 3, accel: 3, weight: 4, solidHandling: 4, coarseHandling: 2, liquidHandling: 2 },
+            { name: "Luigi\nHammer Bro\nPokey", solidSpeed: 3, coarseSpeed: 4, liquidSpeed: 3, accel: 3, weight: 4, solidHandling: 2, coarseHandling: 4, liquidHandling: 2 },
+            { name: "Birdo\nPenguin", solidSpeed: 3, coarseSpeed: 3, liquidSpeed: 4, accel: 3, weight: 4, solidHandling: 2, coarseHandling: 2, liquidHandling: 4 },
+            { name: "Pauline\nSnowman\nPiranha Plant", solidSpeed: 5, coarseSpeed: 4, liquidSpeed: 4, accel: 2, weight: 5, solidHandling: 3, coarseHandling: 1, liquidHandling: 1 },
+            { name: "King Boo\nConkdor", solidSpeed: 4, coarseSpeed: 5, liquidSpeed: 4, accel: 2, weight: 5, solidHandling: 1, coarseHandling: 3, liquidHandling: 1 },
+            { name: "Rosalina\nCataquack", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 5, accel: 2, weight: 5, solidHandling: 1, coarseHandling: 1, liquidHandling: 3 },
+            { name: "Wario\nWiggler", solidSpeed: 6, coarseSpeed: 5, liquidSpeed: 5, accel: 1, weight: 6, solidHandling: 2, coarseHandling: 0, liquidHandling: 0 },
+            { name: "Cow\nDonkey Kong\nChargin' Chuck", solidSpeed: 5, coarseSpeed: 6, liquidSpeed: 5, accel: 1, weight: 6, solidHandling: 0, coarseHandling: 2, liquidHandling: 0 },
+            { name: "Waluigi\nPianta", solidSpeed: 5, coarseSpeed: 5, liquidSpeed: 6, accel: 1, weight: 6, solidHandling: 0, coarseHandling: 0, liquidHandling: 2 },
+            { name: "Bowser", solidSpeed: 6, coarseSpeed: 6, liquidSpeed: 6, accel: 0, weight: 7, solidHandling: 0, coarseHandling: 0, liquidHandling: 0 }
+        ];
+
+        const kartData = [
+            { name: "Mach Rocket\nR.O.B. H.O.G.", solidSpeed: 6, coarseSpeed: 1, liquidSpeed: 1, accel: 7, weight: 0, solidHandling: 10, coarseHandling: 6, liquidHandling: 6 },
+            { name: "Rally Bike\nHyper Pipe", solidSpeed: 0, coarseSpeed: 5, liquidSpeed: 0, accel: 8, weight: 0, solidHandling: 0, coarseHandling: 10, liquidHandling: 6 },
+            { name: "Fin Twin\nDolphin Dasher", solidSpeed: 0, coarseSpeed: 0, liquidSpeed: 5, accel: 8, weight: 0, solidHandling: 6, coarseHandling: 6, liquidHandling: 10 },
+            { name: "Baby Blooper", solidSpeed: 7, coarseSpeed: 2, liquidSpeed: 2, accel: 6, weight: 1, solidHandling: 9, coarseHandling: 5, liquidHandling: 5 },
+            { name: "Biddybuggy (Buggybud)", solidSpeed: 1, coarseSpeed: 6, liquidSpeed: 1, accel: 7, weight: null, solidHandling: 5, coarseHandling: 9, liquidHandling: 5 },
+            { name: "Roadster Royale\nB-Dasher\nHot Rod\nBumble V", solidSpeed: 8, coarseSpeed: 4, liquidSpeed: 4, accel: 4, weight: 3, solidHandling: 8, coarseHandling: 3, liquidHandling: 3 },
+            { name: "Zoom Buggy\nRally Kart", solidSpeed: 4, coarseSpeed: 8, liquidSpeed: 4, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 8, liquidHandling: 3 },
+            { name: "Cloud 9\nRibbit Revster\nCarpet Flyer", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 8, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 3, liquidHandling: 8 },
+            { name: "Billdozer\nBig Horn", solidSpeed: 9, coarseSpeed: 6, liquidSpeed: 6, accel: 2, weight: 5, solidHandling: 7, coarseHandling: 1, liquidHandling: 1 },
+            { name: "Bowser Bruiser\nLi'l Dumpy\nTiny Titan (Rally Romper)\nChargin Truck", solidSpeed: 7, coarseSpeed: 10, liquidSpeed: 7, accel: 1, weight: 5, solidHandling: 1, coarseHandling: 7, liquidHandling: 1 },
+            { name: "Mecha Trike", solidSpeed: 7, coarseSpeed: 7, liquidSpeed: 10, accel: 1, weight: 5, solidHandling: 1, coarseHandling: 1, liquidHandling: 7 },
+            { name: "Rallygator", solidSpeed: 9, coarseSpeed: 6, liquidSpeed: 6, accel: 3, weight: 6, solidHandling: 5, coarseHandling: 0, liquidHandling: 0 },
+            { name: "Lobster Roller", solidSpeed: 7, coarseSpeed: 7, liquidSpeed: 10, accel: 2, weight: 6, solidHandling: 0, coarseHandling: 0, liquidHandling: 5 },
+            { name: "Standard Bike\nCute Scoot\nTune Thumper", solidSpeed: 1, coarseSpeed: 1, liquidSpeed: 1, accel: 9, weight: 0, solidHandling: 7, coarseHandling: 7, liquidHandling: 7 },
+            { name: "Pipe Frame", solidSpeed: 2, coarseSpeed: 2, liquidSpeed: 2, accel: 8, weight: 1, solidHandling: 6, coarseHandling: 6, liquidHandling: 6 },
+            { name: "Loco Moto", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 4, accel: 6, weight: 1, solidHandling: 6, coarseHandling: 6, liquidHandling: 6 },
+            { name: "Blastronaut III", solidSpeed: 5, coarseSpeed: 5, liquidSpeed: 5, accel: 6, weight: 3, solidHandling: 3, coarseHandling: 3, liquidHandling: 3 },
+            { name: "Standard Kart\nPlushbuggy", solidSpeed: 5, coarseSpeed: 5, liquidSpeed: 5, accel: 5, weight: 2, solidHandling: 5, coarseHandling: 5, liquidHandling: 5 },
+            { name: "W-Twin Chopper", solidSpeed: 7, coarseSpeed: 7, liquidSpeed: 7, accel: 3, weight: 2, solidHandling: 5, coarseHandling: 5, liquidHandling: 5 },
+            { name: "Reel Racer", solidSpeed: 8, coarseSpeed: 8, liquidSpeed: 8, accel: 2, weight: 3, solidHandling: 4, coarseHandling: 4, liquidHandling: 4 },
+            { name: "Junkyard Hog", solidSpeed: 8, coarseSpeed: 8, liquidSpeed: 8, accel: 3, weight: 4, solidHandling: 2, coarseHandling: 2, liquidHandling: 2 },
+            { name: "Funky Dorrie", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 8, accel: 5, weight: 5, solidHandling: 1, coarseHandling: 1, liquidHandling: 6 },
+            { name: "Dread Sled", solidSpeed: 3, coarseSpeed: 9, liquidSpeed: 5, accel: 3, weight: 3, solidHandling: 3, coarseHandling: 9, liquidHandling: 4 },
+            { name: "Stellar Sled", solidSpeed: 6, coarseSpeed: 8, liquidSpeed: 11, accel: 0, weight: 5, solidHandling: 1, coarseHandling: 2, liquidHandling: 8 }
+        ];
+
+        // --- DOM Elements ---
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultsTableDiv = document.getElementById('results-table');
+        
+        // --- Event Listener ---
+        calculateBtn.addEventListener('click', calculateAndDisplayCombos);
+
+        function getInputValue(id) {
+            return parseFloat(document.getElementById(id).value) || 0;
+        }
+
+        function validateWeights(ids, validationDivId) {
+            const sum = ids.reduce((total, id) => total + getInputValue(id), 0);
+            const validationDiv = document.getElementById(validationDivId);
+            // Use a small tolerance for floating point issues
+            if (Math.abs(sum - 100) > 0.1) {
+                validationDiv.textContent = `Error: Weights must add up to 100%. Current sum is ${sum.toFixed(1)}%.`;
+                validationDiv.style.display = 'block';
+                return false;
+            }
+            validationDiv.style.display = 'none';
+            return true;
+        }
+
+        function calculateAndDisplayCombos() {
+            // --- 1. Validate Inputs ---
+            const isMainValid = validateWeights(['weight-speed', 'weight-accel', 'weight-weight', 'weight-handling'], 'main-validation');
+            const isSpeedValid = validateWeights(['sub-solid-speed', 'sub-coarse-speed', 'sub-liquid-speed'], 'speed-validation');
+            const isHandlingValid = validateWeights(['sub-solid-handling', 'sub-coarse-handling', 'sub-liquid-handling'], 'handling-validation');
+
+            if (!isMainValid || !isSpeedValid || !isHandlingValid) {
+                resultsTableDiv.innerHTML = `<p style="color: #d92c2c;">Please fix the errors in the weight percentages above.</p>`;
+                return;
+            }
+            
+            // --- 2. Get All Weights ---
+            const weights = {
+                speed: getInputValue('weight-speed') / 100,
+                accel: getInputValue('weight-accel') / 100,
+                weight: getInputValue('weight-weight') / 100,
+                handling: getInputValue('weight-handling') / 100,
+                
+                subSolidSpeed: getInputValue('sub-solid-speed') / 100,
+                subCoarseSpeed: getInputValue('sub-coarse-speed') / 100,
+                subLiquidSpeed: getInputValue('sub-liquid-speed') / 100,
+
+                subSolidHandling: getInputValue('sub-solid-handling') / 100,
+                subCoarseHandling: getInputValue('sub-coarse-handling') / 100,
+                subLiquidHandling: getInputValue('sub-liquid-handling') / 100,
+            };
+
+            // --- 3. Calculate all combinations and scores ---
+            const allCombos = [];
+            for (const char of characterData) {
+                for (const kart of kartData) {
+                    // Combine stats
+                    const combo = {
+                        charName: char.name,
+                        kartName: kart.name,
+                        solidSpeed: char.solidSpeed + kart.solidSpeed,
+                        coarseSpeed: char.coarseSpeed + kart.coarseSpeed,
+                        liquidSpeed: char.liquidSpeed + kart.liquidSpeed,
+                        accel: char.accel + (kart.accel || 0), // Handle null kart accel
+                        weight: char.weight + (kart.weight || 0), // Handle null kart weight
+                        solidHandling: char.solidHandling + kart.solidHandling,
+                        coarseHandling: char.coarseHandling + kart.coarseHandling,
+                        liquidHandling: char.liquidHandling + kart.liquidHandling,
+                    };
+
+                    // Calculate score based on weights
+                    const speedScore = (combo.solidSpeed * weights.subSolidSpeed) +
+                                       (combo.coarseSpeed * weights.subCoarseSpeed) +
+                                       (combo.liquidSpeed * weights.subLiquidSpeed);
+
+                    const handlingScore = (combo.solidHandling * weights.subSolidHandling) +
+                                          (combo.coarseHandling * weights.subCoarseHandling) +
+                                          (combo.liquidHandling * weights.subLiquidHandling);
+
+                    combo.totalScore = (speedScore * weights.speed) +
+                                       (handlingScore * weights.handling) +
+                                       (combo.accel * weights.accel) +
+                                       (combo.weight * weights.weight);
+
+                    allCombos.push(combo);
+                }
+            }
+
+            // --- 4. Sort combos by score (highest first) ---
+            allCombos.sort((a, b) => b.totalScore - a.totalScore);
+
+            // --- 5. Generate and display the HTML table ---
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th class="char-col">Character</th>
+                            <th class="kart-col">Vehicle</th>
+                            <th class="score-col">Overall Score</th>
+                            <th>SS</th><th>CS</th><th>LS</th>
+                            <th>Ac/MT</th>
+                            <th>Wt/C</th>
+                            <th>SH</th><th>CH</th><th>LH</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            allCombos.forEach((combo, index) => {
+                tableHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td class="char-col">${combo.charName}</td>
+                        <td class="kart-col">${combo.kartName}</td>
+                        <td class="score-col">${combo.totalScore.toFixed(2)}</td>
+                        <td>${combo.solidSpeed}</td>
+                        <td>${combo.coarseSpeed}</td>
+                        <td>${combo.liquidSpeed}</td>
+                        <td>${combo.accel}</td>
+                        <td>${combo.weight}</td>
+                        <td>${combo.solidHandling}</td>
+                        <td>${combo.coarseHandling}</td>
+                        <td>${combo.liquidHandling}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                    <b>Key:</b> <b>SS</b>=Solid Speed, <b>CS</b>=Coarse Speed, <b>LS</b>=Liquid Speed, <b>Ac/MT</b>=Accel/M-Turbo, <b>Wt/C</b>=Weight/Coins, <b>SH</b>=Solid Handling, <b>CH</b>=Coarse Handling, <b>LH</b>=Liquid Handling.
+                </p>
+            `;
+
+            resultsTableDiv.innerHTML = tableHTML;
+        }
+
+        // Run once on page load with default values
+        document.addEventListener('DOMContentLoaded', calculateAndDisplayCombos);
+    </script>
+</body>
+</html>
