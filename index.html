@@ -56,22 +56,30 @@
 
         /* --- Panel & Layout Styles --- */
         .panel {
+            background-image:
+                /* Layer 1: The arrow pattern */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='60' viewBox='0 0 25 60'%3E%3Cpolyline points='8,8 12,8 18,20 8,32 12,32 14,20 8,8' stroke='none' fill='%233a3a3a'/%3E%3C/svg%3E"),
+                /* Layer 2: The solid gray header color */
+                linear-gradient(var(--header-bg), var(--header-bg));
+            
+            background-repeat: repeat-x, no-repeat;
+            background-position: center top, top left;
+        
+            background-size: auto, 100% 92px;
+        
             background-color: var(--panel-bg);
             color: var(--text-dark);
             border-radius: 48px;
             margin-bottom: 40px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden; /* This is the key to preventing the header spillover */
+            overflow: hidden; 
         }
 
         .panel-header {
-            background-color: var(--header-bg);
-            /* --- CHANGED: New SVG for thicker, bigger, rounded, closer arrows --- */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='40' viewBox='0 0 20 40'%3E%3Cpolyline points='8,8 18,20 8,32' stroke='%233a3a3a' stroke-width='14' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
-            background-repeat: repeat-x;
-            background-position: center;
+            height: 92px;
+            box-sizing: border-box;
+            
             padding: 15px 25px;
-            /* Ensures perfect alignment with parent's border-radius */
             border-top-left-radius: inherit;
             border-top-right-radius: inherit;
         }
