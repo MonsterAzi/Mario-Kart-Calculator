@@ -15,13 +15,13 @@
         :root {
             --page-bg: #2c3e50;
             --panel-bg: #ffffff;
-            --header-bg: #ced4da; /* Middle Grey */
-            --header-arrows-dark: #212529; /* Much Darker Grey */
+            --header-bg: #4d4d4d; /* CHANGED */
+            --header-arrows-dark: #3a3a3a; /* CHANGED */
             --text-dark: #212529;
             --text-light: #ecf0f1;
             --accent-gold: #f1c40f;
-            --button-bg-yellow: #f1c40f;
-            --fieldset-bg: #f8f9fa; /* Subtle Grey */
+            --button-bg: #00a8e8;
+            --fieldset-bg: #f8f9fa;
         }
 
         body {
@@ -58,7 +58,7 @@
         .panel {
             background-color: var(--panel-bg);
             color: var(--text-dark);
-            border-radius: 24px; /* More rounded corners */
+            border-radius: 48px;
             margin-bottom: 40px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -66,8 +66,8 @@
 
         .panel-header {
             background-color: var(--header-bg);
-            /* SVG background for the arrows - now with darker fill */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill-rule='evenodd' d='M0 40L20 20L0 0h10l20 20l-20 20H0z' fill='%23212529' fill-opacity='0.4'/%3E%3C/svg%3E");
+            /* --- CHANGED: New SVG for thicker, rounded, closer arrows --- */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='40' viewBox='0 0 25 40'%3E%3Cpolyline points='5,4 20,20 5,36' stroke='%233a3a3a' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
             background-repeat: repeat-x;
             background-position: center;
             padding: 15px 25px;
@@ -82,42 +82,37 @@
         }
         
         .panel-content {
-            padding: 25px;
+            padding: 30px 40px;
         }
 
         /* --- Controls & Form Elements --- */
         #controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         fieldset {
             background: var(--fieldset-bg);
-            border: none; /* Removed border */
+            border: 1px solid #dee2e6;
             border-radius: 12px;
-            padding: 20px 20px 10px 20px;
+            padding: 20px;
         }
-        
-        /* Capsule style for the legend */
+
         legend {
-            display: block;
-            text-align: center;
-            margin: 0 auto 20px auto;
-            max-width: 90%;
-            background-color: var(--header-arrows-dark);
-            color: white;
             font-weight: 700;
             font-size: 1.1em;
-            padding: 6px 15px;
-            border-radius: 50px;
+            color: var(--text-dark);
+            padding: 0 10px;
+            margin-left: 5px;
+            margin-bottom: 15px;
         }
 
         .input-group {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
         .input-group label {
@@ -132,7 +127,7 @@
             background-color: #fff;
             border: 1px solid #ced4da;
             color: var(--text-dark);
-            border-radius: 5px;
+            border-radius: 8px;
             text-align: right;
             font-size: 1em;
         }
@@ -140,26 +135,25 @@
         .input-group span {
             margin-left: 8px;
         }
-        
-        /* Yellow button style */
+
         #calculate-btn {
             width: 100%;
             padding: 14px 20px;
             font-size: 1.3em;
             font-weight: 700;
             font-family: 'Lexend', sans-serif;
-            color: var(--text-dark); /* Black text */
-            background-color: var(--button-bg-yellow);
+            color: #fff;
+            background-color: var(--button-bg);
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         #calculate-btn:hover {
-            background-color: #e0b30e; /* Darker yellow on hover */
+            background-color: #0093d1;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 168, 232, 0.3);
         }
 
         .validation-message {
@@ -188,14 +182,22 @@
         }
 
         th {
-            background-color: #e9ecef;
+            background-color: #dee2e6;
             color: var(--text-dark);
             font-weight: 700;
             white-space: pre;
         }
+        
+        tbody tr:first-child td {
+            border-top: none;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: var(--fieldset-bg);
+        }
 
         tbody tr:hover {
-            background-color: #f8f9fa;
+            background-color: #e2f4fb;
         }
 
         .score-col {
@@ -219,7 +221,7 @@
 
         <div class="panel">
             <div class="panel-header">
-                <h2>Stat Weighing</h2>
+                <h2>Controls</h2>
             </div>
             <div class="panel-content">
                 <div id="controls-grid">
@@ -286,10 +288,10 @@
             <div class="panel-header">
                 <h2>Results</h2>
             </div>
-            <div class="panel-content">
+            <div class="panel-content" style="padding: 0;">
                 <div id="results-container">
                     <div id="results-table">
-                        <p>Adjust the weights above and click the button to see the results.</p>
+                        <p style="text-align:center; padding: 20px;">Adjust the weights above and click the button to see the results.</p>
                     </div>
                 </div>
             </div>
@@ -348,7 +350,7 @@
             { name: "Stellar Sled", solidSpeed: 6, coarseSpeed: 8, liquidSpeed: 11, accel: 0, weight: 5, solidHandling: 1, coarseHandling: 2, liquidHandling: 8 }
         ];
 
-        // --- SCRIPT LOGIC (Unchanged) ---
+        // --- SCRIPT LOGIC (Unchanged, except for table generation) ---
         const calculateBtn = document.getElementById('calculate-btn');
         const resultsTableDiv = document.getElementById('results-table');
         
@@ -376,7 +378,7 @@
             const isHandlingValid = validateWeights(['sub-solid-handling', 'sub-coarse-handling', 'sub-liquid-handling'], 'handling-validation');
 
             if (!isMainValid || !isSpeedValid || !isHandlingValid) {
-                resultsTableDiv.innerHTML = `<p style="color: #e74c3c; text-align: center;">Please fix the errors in the weight percentages above.</p>`;
+                resultsTableDiv.innerHTML = `<p style="color: #e74c3c; text-align: center; padding: 20px;">Please fix the errors in the weight percentages above.</p>`;
                 return;
             }
             
@@ -418,6 +420,7 @@
 
             allCombos.sort((a, b) => b.totalScore - a.totalScore);
 
+            // --- Updated Table Generation ---
             let tableHTML = `
                 <table>
                     <thead>
