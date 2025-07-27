@@ -15,13 +15,13 @@
         :root {
             --page-bg: #2c3e50;
             --panel-bg: #ffffff;
-            --header-bg: #e9ecef;
-            --header-arrows-dark: #343a40;
+            --header-bg: #ced4da; /* Middle Grey */
+            --header-arrows-dark: #212529; /* Much Darker Grey */
             --text-dark: #212529;
             --text-light: #ecf0f1;
             --accent-gold: #f1c40f;
-            --button-bg: #3498db;
-            --fieldset-bg: #f8f9fa;
+            --button-bg-yellow: #f1c40f;
+            --fieldset-bg: #f8f9fa; /* Subtle Grey */
         }
 
         body {
@@ -58,16 +58,16 @@
         .panel {
             background-color: var(--panel-bg);
             color: var(--text-dark);
-            border-radius: 16px;
+            border-radius: 24px; /* More rounded corners */
             margin-bottom: 40px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden; /* Important for rounding corners of the header */
+            overflow: hidden;
         }
 
         .panel-header {
             background-color: var(--header-bg);
-            /* SVG background for the arrows */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill-rule='evenodd' d='M0 40L20 20L0 0h10l20 20l-20 20H0z' fill='%23343a40' fill-opacity='0.4'/%3E%3C/svg%3E");
+            /* SVG background for the arrows - now with darker fill */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill-rule='evenodd' d='M0 40L20 20L0 0h10l20 20l-20 20H0z' fill='%23212529' fill-opacity='0.4'/%3E%3C/svg%3E");
             background-repeat: repeat-x;
             background-position: center;
             padding: 15px 25px;
@@ -95,24 +95,29 @@
 
         fieldset {
             background: var(--fieldset-bg);
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
+            border: none; /* Removed border */
+            border-radius: 12px;
+            padding: 20px 20px 10px 20px;
         }
-
+        
+        /* Capsule style for the legend */
         legend {
+            display: block;
+            text-align: center;
+            margin: 0 auto 20px auto;
+            max-width: 90%;
+            background-color: var(--header-arrows-dark);
+            color: white;
             font-weight: 700;
             font-size: 1.1em;
-            color: var(--text-dark);
-            padding: 0 10px;
-            margin-left: 5px;
-            margin-bottom: 10px;
+            padding: 6px 15px;
+            border-radius: 50px;
         }
 
         .input-group {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
         
         .input-group label {
@@ -135,15 +140,16 @@
         .input-group span {
             margin-left: 8px;
         }
-
+        
+        /* Yellow button style */
         #calculate-btn {
             width: 100%;
             padding: 14px 20px;
             font-size: 1.3em;
             font-weight: 700;
             font-family: 'Lexend', sans-serif;
-            color: #fff;
-            background-color: var(--button-bg);
+            color: var(--text-dark); /* Black text */
+            background-color: var(--button-bg-yellow);
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -151,9 +157,9 @@
         }
         
         #calculate-btn:hover {
-            background-color: #2980b9;
+            background-color: #e0b30e; /* Darker yellow on hover */
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
         }
 
         .validation-message {
@@ -182,18 +188,14 @@
         }
 
         th {
-            background-color: #dee2e6;
+            background-color: #e9ecef;
             color: var(--text-dark);
             font-weight: 700;
             white-space: pre;
         }
 
-        tbody tr:nth-child(even) {
-            background-color: var(--fieldset-bg);
-        }
-
         tbody tr:hover {
-            background-color: #e9ecef;
+            background-color: #f8f9fa;
         }
 
         .score-col {
@@ -217,7 +219,7 @@
 
         <div class="panel">
             <div class="panel-header">
-                <h2>Controls</h2>
+                <h2>Stat Weighing</h2>
             </div>
             <div class="panel-content">
                 <div id="controls-grid">
@@ -346,7 +348,7 @@
             { name: "Stellar Sled", solidSpeed: 6, coarseSpeed: 8, liquidSpeed: 11, accel: 0, weight: 5, solidHandling: 1, coarseHandling: 2, liquidHandling: 8 }
         ];
 
-        // --- SCRIPT LOGIC (Unchanged, except for table generation) ---
+        // --- SCRIPT LOGIC (Unchanged) ---
         const calculateBtn = document.getElementById('calculate-btn');
         const resultsTableDiv = document.getElementById('results-table');
         
@@ -416,7 +418,6 @@
 
             allCombos.sort((a, b) => b.totalScore - a.totalScore);
 
-            // --- Updated Table Generation ---
             let tableHTML = `
                 <table>
                     <thead>
