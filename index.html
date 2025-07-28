@@ -11,6 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+        /* --- Font Definition --- */
+        @font-face {
+            font-family: 'Flying Leatherback';
+            src: url('/fonts/flying_leatherback.ttf');
+        }
+
         /* --- Global Styles & Theme --- */
         :root {
             --page-bg: #2c3e50;
@@ -39,7 +45,8 @@
         }
 
         h1 {
-            font-size: 2.5em;
+            font-family: 'Flying Leatherback', sans-serif; /* CHANGED */
+            font-size: 2.8em; /* Adjusted for new font */
             color: var(--accent-gold);
             text-align: center;
             font-weight: 700;
@@ -75,9 +82,10 @@
         }
 
         .panel-header h2 {
+            font-family: 'Flying Leatherback', sans-serif; /* CHANGED */
+            font-size: 2em; /* Adjusted for new font */
             color: var(--accent-gold);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-            font-size: 1.8em;
             margin: 0;
             text-align: center;
         }
@@ -195,11 +203,11 @@
         }
 
         #calculate-btn {
+            font-family: 'Flying Leatherback', sans-serif; /* CHANGED */
             width: 100%;
             padding: 14px 20px;
-            font-size: 1.6em;
+            font-size: 1.8em; /* Adjusted for new font */
             font-weight: 700;
-            font-family: 'Lexend', sans-serif;
             color: var(--text-light);
             text-shadow: 3.00px 0.00px 0 #888, 2.77px 1.15px 0 #888, 2.12px 2.12px 0 #888, 1.15px 2.77px 0 #888, 0.00px 3.00px 0 #888, -1.15px 2.77px 0 #888, -2.12px 2.12px 0 #888, -2.77px 1.15px 0 #888, -3.00px 0.00px 0 #888, -2.77px -1.15px 0 #888, -2.12px -2.12px 0 #888, -1.15px -2.77px 0 #888, 0.00px -3.00px 0 #888, 1.15px -2.77px 0 #888, 2.12px -2.12px 0 #888, 2.77px -1.15px 0 #888;
             background-color: #888;
@@ -222,7 +230,7 @@
         
         th, td {
             border: 1px solid var(--header-bg);
-            padding: 12px 10px; /* CHANGED */
+            padding: 12px 10px;
             text-align: center;
             vertical-align: middle;
         }
@@ -235,7 +243,7 @@
             background-color: var(--fieldset-bg);
             color: var(--text-light);
             font-weight: 700;
-            white-space: normal; /* CHANGED */
+            white-space: normal;
         }
         
         tbody tr:first-child td { border-top: none; }
@@ -248,13 +256,10 @@
             background-color: #00395f;
         }
         
-        /* Hover rule removed */
-
         .score-col {
             font-weight: bold;
             font-size: 1.1em;
-            color: var(--accent-gold); /* CHANGED */
-            /* background-color removed */
+            color: var(--accent-gold);
         }
         .char-col, .kart-col { white-space: pre-wrap; text-align: left; min-width: 150px; }
     </style>
