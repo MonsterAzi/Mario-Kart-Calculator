@@ -34,8 +34,7 @@
         body {
             font-family: 'Lexend', sans-serif;
             line-height: 1.6;
-            /* --- CHANGED: Background Image --- */
-            background-color: var(--page-bg); /* Fallback color */
+            background-color: var(--page-bg);
             background-image: url('imgs/MKW_Background.webp');
             background-size: cover;
             background-position: center center;
@@ -55,13 +54,13 @@
             font-size: 4.6em;
             text-align: center;
             font-weight: 700;
-            text-shadow: 0 0 8px rgba(241, 196, 15, 0.3), 5px 5px 2px rgba(0, 0, 0, 0.5);
             margin-bottom: 10px;
-            /* --- CHANGED: Text Gradient --- */
             background-image: linear-gradient(to bottom, var(--accent-gold), var(--accent-orange));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            /* --- CHANGED: Switched to filter for proper shadow rendering --- */
+            filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 8px rgba(241, 196, 15, 0.3));
         }
         
         p.subtitle {
@@ -94,16 +93,16 @@
         .panel-header h2 {
             font-family: 'Flying Leatherneck', sans-serif;
             font-size: 3.5em;
-            text-shadow: 3px 3px 1px rgba(0,0,0,0.5);
             margin: 0;
             text-align: center;
             position: relative;
             top: 3px;
-            /* --- CHANGED: Text Gradient --- */
             background-image: linear-gradient(to bottom, var(--accent-gold), var(--accent-orange));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            /* --- CHANGED: Switched to filter for proper shadow rendering --- */
+            filter: drop-shadow(3px 3px 1px rgba(0,0,0,0.5));
         }
         
         .panel-content {
