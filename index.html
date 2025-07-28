@@ -46,14 +46,13 @@
 
         h1 {
             font-family: 'Flying Leatherneck', sans-serif;
-            font-size: 3.5em; /* CHANGED */
+            font-size: 4.2em; /* CHANGED */
             color: var(--accent-gold);
             text-align: center;
             font-weight: 700;
             text-shadow: 0 0 8px rgba(241, 196, 15, 0.3);
             margin-bottom: 10px;
-            position: relative; /* CHANGED */
-            top: 10px; /* CHANGED */
+            /* Vertical alignment fix removed from here */
         }
         
         p.subtitle {
@@ -85,11 +84,13 @@
 
         .panel-header h2 {
             font-family: 'Flying Leatherneck', sans-serif;
-            font-size: 2.4em; /* CHANGED */
+            font-size: 2.8em; /* CHANGED */
             color: var(--accent-gold);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             margin: 0;
             text-align: center;
+            position: relative; /* CHANGED */
+            top: 3px; /* CHANGED */
         }
         
         .panel-content {
@@ -208,7 +209,7 @@
             font-family: 'Flying Leatherneck', sans-serif;
             width: 100%;
             padding: 14px 20px;
-            font-size: 2.2em; /* CHANGED */
+            font-size: 2.5em; /* CHANGED */
             font-weight: 700;
             color: var(--text-light);
             text-shadow: 3.00px 0.00px 0 #888, 2.77px 1.15px 0 #888, 2.12px 2.12px 0 #888, 1.15px 2.77px 0 #888, 0.00px 3.00px 0 #888, -1.15px 2.77px 0 #888, -2.12px 2.12px 0 #888, -2.77px 1.15px 0 #888, -3.00px 0.00px 0 #888, -2.77px -1.15px 0 #888, -2.12px -2.12px 0 #888, -1.15px -2.77px 0 #888, 0.00px -3.00px 0 #888, 1.15px -2.77px 0 #888, 2.12px -2.12px 0 #888, 2.77px -1.15px 0 #888;
@@ -217,6 +218,8 @@
             border-radius: 48px;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative; /* CHANGED */
+            top: 2px; /* CHANGED */
         }
         
         #calculate-btn:hover {
