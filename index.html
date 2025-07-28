@@ -72,31 +72,30 @@
         /* --- Grid Layout for main content --- */
         .content-wrapper {
             display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            /* --- CHANGED: New layout logic --- */
+            grid-template-columns: auto auto;
+            justify-content: center;
             align-items: start;
             gap: 40px;
         }
 
         .calculator-column {
-            grid-column: 2;
-            max-width: 1200px;
+            max-width: 1200px; /* CHANGED */
             width: 100%;
         }
 
         .sidebar-column {
-            grid-column: 3;
-            max-width: 500px; /* CHANGED */
-            justify-self: center; /* CHANGED */
-            width: 100%;
+            width: 500px; /* CHANGED */
         }
 
-        @media (max-width: 1800px) { /* CHANGED */
+        @media (max-width: 1780px) { /* CHANGED */
             .content-wrapper {
                 grid-template-columns: 1fr;
+                justify-content: initial;
             }
             .calculator-column, .sidebar-column {
-                grid-column: 1;
                 margin: 0 auto;
+                width: 100%;
             }
             .calculator-column {
                 max-width: 1100px;
