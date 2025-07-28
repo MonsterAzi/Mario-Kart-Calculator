@@ -182,7 +182,7 @@
         .input-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 5px; /* CHANGED */
             margin-bottom: 12px;
         }
         
@@ -295,11 +295,7 @@
         tbody tr:nth-child(odd) { background-color: #001b68; }
         tbody tr:nth-child(even) { background-color: #00395f; }
         .score-col { font-weight: bold; font-size: 1.1em; color: var(--accent-gold); }
-        .char-col, .kart-col { 
-            white-space: pre-wrap; 
-            text-align: left; 
-            /* --- FIXED --- min-width removed */
-        }
+        .char-col, .kart-col { white-space: pre-wrap; text-align: left; }
     </style>
 </head>
 <body>
