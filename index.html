@@ -21,7 +21,7 @@
             --text-light: #ecf0f1;
             --accent-gold: #ffe000;
             --fieldset-bg: #808080;
-            --slider-blue: #001b68; /* CHANGED */
+            --slider-blue: #001b68;
         }
 
         body {
@@ -150,7 +150,7 @@
             appearance: none;
             width: 100%;
             height: 8px;
-            background: var(--panel-bg); /* CHANGED */
+            background: var(--panel-bg);
             border-radius: 5px;
             outline: none;
         }
@@ -158,13 +158,13 @@
         input[type="range"]::-webkit-slider-runnable-track {
             height: 8px;
             border-radius: 5px;
-            background: linear-gradient(to right, var(--slider-blue) var(--p, 0%), var(--panel-bg) var(--p, 0%)); /* CHANGED */
+            background: linear-gradient(to right, var(--slider-blue) var(--p, 0%), var(--panel-bg) var(--p, 0%));
         }
 
         input[type="range"]::-moz-range-track {
             height: 8px;
             border-radius: 5px;
-            background: var(--panel-bg); /* CHANGED */
+            background: var(--panel-bg);
         }
 
         input[type="range"]::-moz-range-progress {
@@ -221,42 +221,40 @@
         table { width: 100%; border-collapse: collapse; }
         
         th, td {
-            border: 1px solid var(--header-bg); /* CHANGED */
-            padding: 12px 15px;
+            border: 1px solid var(--header-bg);
+            padding: 12px 10px; /* CHANGED */
             text-align: center;
             vertical-align: middle;
         }
         
         td {
-            color: var(--text-light); /* CHANGED */
+            color: var(--text-light);
         }
         
         th {
-            background-color: var(--fieldset-bg); /* CHANGED */
-            color: var(--text-light); /* CHANGED */
+            background-color: var(--fieldset-bg);
+            color: var(--text-light);
             font-weight: 700;
-            white-space: pre;
+            white-space: normal; /* CHANGED */
         }
         
         tbody tr:first-child td { border-top: none; }
         
-        tbody tr:nth-child(odd) { /* CHANGED */
+        tbody tr:nth-child(odd) {
             background-color: #001b68;
         }
 
-        tbody tr:nth-child(even) { /* CHANGED */
+        tbody tr:nth-child(even) {
             background-color: #00395f;
         }
         
-        tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.15); /* CHANGED */
-        }
+        /* Hover rule removed */
 
         .score-col {
             font-weight: bold;
             font-size: 1.1em;
-            background-color: #fff9e6;
-            color: #b38600;
+            color: var(--accent-gold); /* CHANGED */
+            /* background-color removed */
         }
         .char-col, .kart-col { white-space: pre-wrap; text-align: left; min-width: 150px; }
     </style>
