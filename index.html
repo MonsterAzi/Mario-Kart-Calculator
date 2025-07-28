@@ -45,7 +45,7 @@
         }
 
         main {
-            max-width: 1200px;
+            max-width: 1600px; /* Increased max-width for the new layout */
             margin: 20px auto;
         }
 
@@ -59,7 +59,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            /* --- CHANGED: Switched to filter for proper shadow rendering --- */
             filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 8px rgba(241, 196, 15, 0.3));
         }
         
@@ -68,6 +67,20 @@
             color: #bdc3c7;
             max-width: 800px;
             margin: 0 auto 40px auto;
+        }
+
+        /* --- NEW: Grid Layout for main content --- */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Main content | Sidebar */
+            align-items: start;
+            gap: 40px;
+        }
+
+        @media (max-width: 1100px) {
+            .content-wrapper {
+                grid-template-columns: 1fr; /* Stack columns on smaller screens */
+            }
         }
 
         /* --- Panel & Layout Styles --- */
@@ -101,12 +114,28 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            /* --- CHANGED: Switched to filter for proper shadow rendering --- */
             filter: drop-shadow(3px 3px 1px rgba(0,0,0,0.5));
         }
         
         .panel-content {
             padding: 30px 40px;
+        }
+
+        /* --- NEW: Limitations Panel Styling --- */
+        .limitations-content {
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+        .limitations-content h3 {
+            font-size: 1.2em;
+            color: var(--slider-blue);
+            margin-top: 15px;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #eee;
+        }
+        .limitations-content h3:first-of-type {
+            margin-top: 0;
         }
 
         /* --- Controls & Form Elements --- */
@@ -244,40 +273,13 @@
         .validation-message { color: #e74c3c; font-weight: bold; text-align: center; margin-top: 10px; display: none; }
         #results-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
-        
-        th, td {
-            border: 1px solid var(--header-bg);
-            padding: 12px 10px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        
-        td {
-            color: var(--text-light);
-        }
-        
-        th {
-            background-color: var(--fieldset-bg);
-            color: var(--text-light);
-            font-weight: 700;
-            white-space: normal;
-        }
-        
+        th, td { border: 1px solid var(--header-bg); padding: 12px 10px; text-align: center; vertical-align: middle; }
+        td { color: var(--text-light); }
+        th { background-color: var(--fieldset-bg); color: var(--text-light); font-weight: 700; white-space: normal; }
         tbody tr:first-child td { border-top: none; }
-        
-        tbody tr:nth-child(odd) {
-            background-color: #001b68;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #00395f;
-        }
-        
-        .score-col {
-            font-weight: bold;
-            font-size: 1.1em;
-            color: var(--accent-gold);
-        }
+        tbody tr:nth-child(odd) { background-color: #001b68; }
+        tbody tr:nth-child(even) { background-color: #00395f; }
+        .score-col { font-weight: bold; font-size: 1.1em; color: var(--accent-gold); }
         .char-col, .kart-col { white-space: pre-wrap; text-align: left; min-width: 150px; }
     </style>
 </head>
@@ -286,93 +288,122 @@
         <h1>Mario Kart World Combo Calculator</h1>
         <p class="subtitle">Use the sliders for quick, auto-balanced adjustments, or type directly into the boxes for precise values. Stats must add up to 100%.</p>
 
-        <div class="panel">
-            <div class="panel-header">
-                <h2>Controls</h2>
-            </div>
-            <div class="panel-content">
-                <div id="controls-grid">
-                    <fieldset>
-                        <legend>Main Stat Weights</legend>
-                        <div class="input-group">
-                            <label for="weight-speed">Speed</label>
-                            <input type="range" id="slider-weight-speed" value="36" min="0" max="100" step="0.1">
-                            <input type="number" id="weight-speed" value="36" min="0" max="100"><span>%</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="weight-accel">Accel & Mini-Turbo</label>
-                            <input type="range" id="slider-weight-accel" value="28" min="0" max="100" step="0.1">
-                            <input type="number" id="weight-accel" value="28" min="0" max="100"><span>%</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="weight-weight">Weight & Coins</label>
-                            <input type="range" id="slider-weight-weight" value="14" min="0" max="100" step="0.1">
-                            <input type="number" id="weight-weight" value="14" min="0" max="100"><span>%</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="weight-handling">Handling</label>
-                            <input type="range" id="slider-weight-handling" value="22" min="0" max="100" step="0.1">
-                            <input type="number" id="weight-handling" value="22" min="0" max="100"><span>%</span>
-                        </div>
-                        <div id="main-validation" class="validation-message"></div>
-                    </fieldset>
+        <!-- NEW: Wrapper for the grid layout -->
+        <div class="content-wrapper">
+            <!-- Column 1: The main calculator -->
+            <div class="calculator-column">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Controls</h2>
+                    </div>
+                    <div class="panel-content">
+                        <div id="controls-grid">
+                            <fieldset>
+                                <legend>Main Stat Weights</legend>
+                                <div class="input-group">
+                                    <label for="weight-speed">Speed</label>
+                                    <input type="range" id="slider-weight-speed" value="36" min="0" max="100" step="0.1">
+                                    <input type="number" id="weight-speed" value="36" min="0" max="100"><span>%</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="weight-accel">Accel & Mini-Turbo</label>
+                                    <input type="range" id="slider-weight-accel" value="28" min="0" max="100" step="0.1">
+                                    <input type="number" id="weight-accel" value="28" min="0" max="100"><span>%</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="weight-weight">Weight & Coins</label>
+                                    <input type="range" id="slider-weight-weight" value="14" min="0" max="100" step="0.1">
+                                    <input type="number" id="weight-weight" value="14" min="0" max="100"><span>%</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="weight-handling">Handling</label>
+                                    <input type="range" id="slider-weight-handling" value="22" min="0" max="100" step="0.1">
+                                    <input type="number" id="weight-handling" value="22" min="0" max="100"><span>%</span>
+                                </div>
+                                <div id="main-validation" class="validation-message"></div>
+                            </fieldset>
 
-                    <fieldset>
-                        <legend>Speed Sub-Stat Weights</legend>
-                        <div class="input-group">
-                            <label for="sub-solid-speed">Solid Speed</label>
-                            <input type="range" id="slider-sub-solid-speed" value="55" min="0" max="100" step="0.1">
-                            <input type="number" id="sub-solid-speed" value="55" min="0" max="100"><span>%</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="sub-coarse-speed">Coarse Speed</label>
-                            <input type="range" id="slider-sub-coarse-speed" value="25" min="0" max="100" step="0.1">
-                            <input type="number" id="sub-coarse-speed" value="25" min="0" max="100"><span>%</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="sub-liquid-speed">Liquid Speed</label>
-                            <input type="range" id="slider-sub-liquid-speed" value="20" min="0" max="100" step="0.1">
-                            <input type="number" id="sub-liquid-speed" value="20" min="0" max="100"><span>%</span>
-                        </div>
-                        <div id="speed-validation" class="validation-message"></div>
-                    </fieldset>
+                            <fieldset>
+                                <legend>Speed Sub-Stat Weights</legend>
+                                <div class="input-group">
+                                    <label for="sub-solid-speed">Solid Speed</label>
+                                    <input type="range" id="slider-sub-solid-speed" value="55" min="0" max="100" step="0.1">
+                                    <input type="number" id="sub-solid-speed" value="55" min="0" max="100"><span>%</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="sub-coarse-speed">Coarse Speed</label>
+                                    <input type="range" id="slider-sub-coarse-speed" value="25" min="0" max="100" step="0.1">
+                                    <input type="number" id="sub-coarse-speed" value="25" min="0" max="100"><span>%</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="sub-liquid-speed">Liquid Speed</label>
+                                    <input type="range" id="slider-sub-liquid-speed" value="20" min="0" max="100" step="0.1">
+                                    <input type="number" id="sub-liquid-speed" value="20" min="0" max="100"><span>%</span>
+                                </div>
+                                <div id="speed-validation" class="validation-message"></div>
+                            </fieldset>
 
-                    <fieldset>
-                        <legend>Handling Sub-Stat Weights</legend>
-                        <div class="input-group">
-                            <label for="sub-solid-handling">Solid Handling</label>
-                            <input type="range" id="slider-sub-solid-handling" value="45" min="0" max="100" step="0.1">
-                            <input type="number" id="sub-solid-handling" value="45" min="0" max="100"><span>%</span>
+                            <fieldset>
+                                <legend>Handling Sub-Stat Weights</legend>
+                                <div class="input-group">
+                                    <label for="sub-solid-handling">Solid Handling</label>
+                                    <input type="range" id="slider-sub-solid-handling" value="45" min="0" max="100" step="0.1">
+                                    <input type="number" id="sub-solid-handling" value="45" min="0" max="100"><span>%</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="sub-coarse-handling">Coarse Handling</label>
+                                    <input type="range" id="slider-sub-coarse-handling" value="30" min="0" max="100" step="0.1">
+                                    <input type="number" id="sub-coarse-handling" value="30" min="0" max="100"><span>%</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="sub-liquid-handling">Liquid Handling</label>
+                                    <input type="range" id="slider-sub-liquid-handling" value="25" min="0" max="100" step="0.1">
+                                    <input type="number" id="sub-liquid-handling" value="25" min="0" max="100"><span>%</span>
+                                </div>
+                                <div id="handling-validation" class="validation-message"></div>
+                            </fieldset>
                         </div>
-                        <div class="input-group">
-                            <label for="sub-coarse-handling">Coarse Handling</label>
-                            <input type="range" id="slider-sub-coarse-handling" value="30" min="0" max="100" step="0.1">
-                            <input type="number" id="sub-coarse-handling" value="30" min="0" max="100"><span>%</span>
-                        </div>
-                        <div class="input-group">
-                            <label for="sub-liquid-handling">Liquid Handling</label>
-                            <input type="range" id="slider-sub-liquid-handling" value="25" min="0" max="100" step="0.1">
-                            <input type="number" id="sub-liquid-handling" value="25" min="0" max="100"><span>%</span>
-                        </div>
-                        <div id="handling-validation" class="validation-message"></div>
-                    </fieldset>
-                </div>
-                <button id="calculate-btn">Find Best Combos</button>
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-header">
-                <h2>Results</h2>
-            </div>
-            <div class="panel-content" style="padding: 0;">
-                <div id="results-container">
-                    <div id="results-table">
-                        <p style="text-align:center; padding: 20px;">Adjust the weights above and click the button to see the results.</p>
+                        <button id="calculate-btn">Find Best Combos</button>
                     </div>
                 </div>
-            </div>
-        </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Results</h2>
+                    </div>
+                    <div class="panel-content" style="padding: 0;">
+                        <div id="results-container">
+                            <div id="results-table">
+                                <p style="text-align:center; padding: 20px;">Adjust the weights above and click the button to see the results.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End calculator-column -->
+            
+            <!-- Column 2: The new sidebar -->
+            <div class="sidebar-column">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Limitations</h2>
+                    </div>
+                    <div class="panel-content limitations-content">
+                        <h3>Why isn't Toadette / Baby Blooper #1?</h3>
+                        <p>
+                            This calculator can only see the raw stats provided. It lacks access to crucial "hidden" statistics like hitboxes. For example, while the <strong>Toadette / Baby Blooper</strong> combo has identical stats to combos like <strong>Peach / Mach Rocket</strong>, many prefer it because of its wider hitbox that makes latching onto rails easier and that it won't be knocked over. These are real performance factors the calculator cannot account for.
+                        </p>
+                        <h3>Linearity Assumption</h3>
+                        <p>
+                            You will also notice that <strong>Toadette / Baby Blooper</strong> has an identical score to many other <strong>Baby Blooper</strong> combos. This exposes another flaw of this calculator as for simplicity and ease of use, this tool assumes all stat points are equal (i.e., the gain from 1 to 2 speed is the same as from 8 to 9). In the game's actual code, stats may have diminishing returns, making our linear model an approximation. Additonally, stats like handling naturally have nonlinear value. This is why combos that are known to perform worse than others in practice can get the same score on this calculator.
+                        </p>
+                        <p>
+                            If I can get feedback from experienced players about default weights and non-linear values, I hope to add them in a future update!
+                        </p>
+                    </div>
+                </div>
+            </div> <!-- End sidebar-column -->
+
+        </div> <!-- End content-wrapper -->
     </main>
 
     <script>
