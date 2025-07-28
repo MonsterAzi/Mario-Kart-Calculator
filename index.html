@@ -72,28 +72,29 @@
         /* --- Grid Layout for main content --- */
         .content-wrapper {
             display: grid;
-            /* --- CHANGED: New layout logic --- */
-            grid-template-columns: auto auto;
-            justify-content: center;
+            /* --- FIXED: Correct 3-column centering layout --- */
+            grid-template-columns: 1fr auto 1fr;
             align-items: start;
             gap: 40px;
         }
 
         .calculator-column {
-            max-width: 1200px; /* CHANGED */
+            grid-column: 2; /* Center column */
+            max-width: 1200px;
             width: 100%;
         }
 
         .sidebar-column {
-            width: 500px; /* CHANGED */
+            grid-column: 3; /* Right column */
+            width: 500px;
         }
 
-        @media (max-width: 1780px) { /* CHANGED */
+        @media (max-width: 1800px) {
             .content-wrapper {
-                grid-template-columns: 1fr;
-                justify-content: initial;
+                grid-template-columns: 1fr; /* Stack to single column */
             }
             .calculator-column, .sidebar-column {
+                grid-column: 1; /* Both occupy the single column */
                 margin: 0 auto;
                 width: 100%;
             }
