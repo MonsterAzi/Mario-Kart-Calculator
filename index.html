@@ -79,15 +79,19 @@
 
         .calculator-column {
             grid-column: 2;
-            max-width: 1200px; /* CHANGED */
+            max-width: 1200px;
             width: 100%;
         }
 
         .sidebar-column {
             grid-column: 3;
+            /* --- CHANGED --- */
+            width: 100%;
+            max-width: 450px;      /* Make it wider */
+            justify-self: center;  /* Center it in the right-hand column */
         }
 
-        @media (max-width: 1650px) { /* CHANGED */
+        @media (max-width: 1650px) {
             .content-wrapper {
                 grid-template-columns: 1fr;
             }
@@ -95,6 +99,7 @@
                 grid-column: 1;
                 margin: 0 auto;
                 max-width: 1100px;
+                justify-self: auto; /* Reset justify-self for stacked layout */
             }
         }
 
