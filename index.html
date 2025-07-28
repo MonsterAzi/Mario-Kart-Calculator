@@ -21,6 +21,8 @@
             --text-light: #ecf0f1;
             --accent-gold: #ffe000;
             --fieldset-bg: #808080;
+            --slider-blue: #005f99; /* Darker blue for sliders */
+            --slider-track: #e9ecef;
         }
 
         body {
@@ -55,10 +57,7 @@
 
         /* --- Panel & Layout Styles --- */
         .panel {
-            background-image: linear-gradient(
-                transparent 50px,
-                var(--panel-bg) 50px
-            );
+            background-image: linear-gradient( transparent 50px, var(--panel-bg) 50px );
             color: var(--text-dark);
             border-radius: 48px;
             margin-bottom: 40px;
@@ -91,7 +90,7 @@
         /* --- Controls & Form Elements --- */
         #controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
@@ -100,7 +99,7 @@
             background: var(--fieldset-bg);
             border: 0px solid transparent;
             border-radius: 48px;
-            padding: 20px;
+            padding: 20px 25px;
         }
 
         legend {
@@ -111,29 +110,27 @@
             font-weight: 700;
             font-size: 1.1em;
             margin-left: 5px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .input-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 12px;
         }
         
         .input-group label {
-            flex-basis: 140px;
+            flex-basis: 120px;
             flex-shrink: 0;
+            line-height: 1.2;
+            color: var(--text-light);
         }
-
-        .input-group input[type="range"] {
-            flex-grow: 1;
-            margin: 0 5px;
-        }
-
+        
         .input-group input[type="number"] {
+            flex-basis: 55px;
+            flex-shrink: 0;
             font-family: 'Lexend', sans-serif;
-            width: 60px;
             padding: 8px;
             background-color: #fff;
             border: 1px solid #ced4da;
@@ -141,11 +138,61 @@
             border-radius: 8px;
             text-align: right;
             font-size: 1em;
-            flex-shrink: 0;
         }
 
         .input-group span {
-            flex-shrink: 0;
+            color: var(--text-light);
+        }
+
+        /* --- Slider Styling --- */
+        input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: var(--slider-track);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, var(--slider-blue) var(--p, 0%), var(--slider-track) var(--p, 0%));
+        }
+
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            border-radius: 5px;
+            background: var(--slider-track);
+        }
+
+        input[type="range"]::-moz-range-progress {
+            height: 8px;
+            border-radius: 5px;
+            background: var(--slider-blue);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -6px; /* center thumb on track */
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 3px solid var(--text-dark);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 3px solid var(--text-dark);
+            border-radius: 50%;
+            cursor: pointer;
         }
 
         #calculate-btn {
@@ -155,8 +202,7 @@
             font-weight: 700;
             font-family: 'Lexend', sans-serif;
             color: var(--text-light);
-            text-shadow:
-                 3.00px  0.00px 0 #888, 2.77px  1.15px 0 #888, 2.12px  2.12px 0 #888, 1.15px  2.77px 0 #888, 0.00px  3.00px 0 #888, -1.15px  2.77px 0 #888, -2.12px  2.12px 0 #888, -2.77px  1.15px 0 #888, -3.00px  0.00px 0 #888, -2.77px -1.15px 0 #888, -2.12px -2.12px 0 #888, -1.15px -2.77px 0 #888, 0.00px -3.00px 0 #888, 1.15px -2.77px 0 #888, 2.12px -2.12px 0 #888, 2.77px -1.15px 0 #888;
+            text-shadow: 3.00px 0.00px 0 #888, 2.77px 1.15px 0 #888, 2.12px 2.12px 0 #888, 1.15px 2.77px 0 #888, 0.00px 3.00px 0 #888, -1.15px 2.77px 0 #888, -2.12px 2.12px 0 #888, -2.77px 1.15px 0 #888, -3.00px 0.00px 0 #888, -2.77px -1.15px 0 #888, -2.12px -2.12px 0 #888, -1.15px -2.77px 0 #888, 0.00px -3.00px 0 #888, 1.15px -2.77px 0 #888, 2.12px -2.12px 0 #888, 2.77px -1.15px 0 #888;
             background-color: #888;
             border: none;
             border-radius: 48px;
@@ -198,22 +244,22 @@
                         <legend>Main Stat Weights</legend>
                         <div class="input-group">
                             <label for="weight-speed">Speed</label>
-                            <input type="range" id="slider-weight-speed" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-weight-speed" value="30" min="0" max="100" step="0.1">
                             <input type="number" id="weight-speed" value="30" min="0" max="100"><span>%</span>
                         </div>
                         <div class="input-group">
                             <label for="weight-accel">Accel & Mini-Turbo</label>
-                            <input type="range" id="slider-weight-accel" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-weight-accel" value="30" min="0" max="100" step="0.1">
                             <input type="number" id="weight-accel" value="30" min="0" max="100"><span>%</span>
                         </div>
                         <div class="input-group">
                             <label for="weight-weight">Weight & Coins</label>
-                            <input type="range" id="slider-weight-weight" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-weight-weight" value="10" min="0" max="100" step="0.1">
                             <input type="number" id="weight-weight" value="10" min="0" max="100"><span>%</span>
                         </div>
                         <div class="input-group">
                             <label for="weight-handling">Handling</label>
-                            <input type="range" id="slider-weight-handling" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-weight-handling" value="30" min="0" max="100" step="0.1">
                             <input type="number" id="weight-handling" value="30" min="0" max="100"><span>%</span>
                         </div>
                         <div id="main-validation" class="validation-message"></div>
@@ -223,17 +269,17 @@
                         <legend>Speed Sub-Stat Weights</legend>
                         <div class="input-group">
                             <label for="sub-solid-speed">Solid Speed</label>
-                            <input type="range" id="slider-sub-solid-speed" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-sub-solid-speed" value="50" min="0" max="100" step="0.1">
                             <input type="number" id="sub-solid-speed" value="50" min="0" max="100"><span>%</span>
                         </div>
                         <div class="input-group">
                             <label for="sub-coarse-speed">Coarse Speed</label>
-                            <input type="range" id="slider-sub-coarse-speed" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-sub-coarse-speed" value="30" min="0" max="100" step="0.1">
                             <input type="number" id="sub-coarse-speed" value="30" min="0" max="100"><span>%</span>
                         </div>
                         <div class="input-group">
                             <label for="sub-liquid-speed">Liquid Speed</label>
-                            <input type="range" id="slider-sub-liquid-speed" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-sub-liquid-speed" value="20" min="0" max="100" step="0.1">
                             <input type="number" id="sub-liquid-speed" value="20" min="0" max="100"><span>%</span>
                         </div>
                         <div id="speed-validation" class="validation-message"></div>
@@ -243,17 +289,17 @@
                         <legend>Handling Sub-Stat Weights</legend>
                         <div class="input-group">
                             <label for="sub-solid-handling">Solid Handling</label>
-                            <input type="range" id="slider-sub-solid-handling" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-sub-solid-handling" value="50" min="0" max="100" step="0.1">
                             <input type="number" id="sub-solid-handling" value="50" min="0" max="100"><span>%</span>
                         </div>
                         <div class="input-group">
                             <label for="sub-coarse-handling">Coarse Handling</label>
-                            <input type="range" id="slider-sub-coarse-handling" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-sub-coarse-handling" value="30" min="0" max="100" step="0.1">
                             <input type="number" id="sub-coarse-handling" value="30" min="0" max="100"><span>%</span>
                         </div>
                         <div class="input-group">
                             <label for="sub-liquid-handling">Liquid Handling</label>
-                            <input type="range" id="slider-sub-liquid-handling" min="0" max="100" step="0.1">
+                            <input type="range" id="slider-sub-liquid-handling" value="20" min="0" max="100" step="0.1">
                             <input type="number" id="sub-liquid-handling" value="20" min="0" max="100"><span>%</span>
                         </div>
                         <div id="handling-validation" class="validation-message"></div>
@@ -282,97 +328,91 @@
         const characterData = [ { name: "Baby Peach\nBaby Daisy\nSwooper\nPara-Biddybud", solidSpeed: 0, coarseSpeed: 0, liquidSpeed: 0, accel: 7, weight: 0, solidHandling: 6, coarseHandling: 6, liquidHandling: 6 }, { name: "Baby Mario\nGoomba\nSpike", solidSpeed: 1, coarseSpeed: 0, liquidSpeed: 0, accel: 6, weight: 1, solidHandling: 7, coarseHandling: 5, liquidHandling: 5 }, { name: "Baby Luigi\nDry Bones\nPeepa", solidSpeed: 0, coarseSpeed: 1, liquidSpeed: 0, accel: 6, weight: 1, solidHandling: 5, coarseHandling: 7, liquidHandling: 5 }, { name: "Baby Rosalina\nSidestepper\nFishbone", solidSpeed: 0, coarseSpeed: 0, liquidSpeed: 1, accel: 6, weight: 1, solidHandling: 5, coarseHandling: 5, liquidHandling: 7 }, { name: "Toadette\nNabbit", solidSpeed: 2, coarseSpeed: 1, liquidSpeed: 1, accel: 5, weight: 2, solidHandling: 6, coarseHandling: 4, liquidHandling: 4 }, { name: "Toad\nShy Guy\nStingby", solidSpeed: 1, coarseSpeed: 2, liquidSpeed: 1, accel: 5, weight: 2, solidHandling: 4, coarseHandling: 6, liquidHandling: 4 }, { name: "Koopa Troopa\nLakitu\nCheep Cheep", solidSpeed: 1, coarseSpeed: 1, liquidSpeed: 2, accel: 5, weight: 2, solidHandling: 4, coarseHandling: 4, liquidHandling: 6 }, { name: "Peach\nDaisy\nCoin Coffer", solidSpeed: 3, coarseSpeed: 2, liquidSpeed: 2, accel: 4, weight: 3, solidHandling: 5, coarseHandling: 3, liquidHandling: 3 }, { name: "Yoshi\nMonty Mole", solidSpeed: 2, coarseSpeed: 3, liquidSpeed: 2, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 5, liquidHandling: 3 }, { name: "Bowser Jr.\nDolphin", solidSpeed: 2, coarseSpeed: 2, liquidSpeed: 3, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 3, liquidHandling: 5 }, { name: "Mario\nRocky Wrench", solidSpeed: 4, coarseSpeed: 3, liquidSpeed: 3, accel: 3, weight: 4, solidHandling: 4, coarseHandling: 2, liquidHandling: 2 }, { name: "Luigi\nHammer Bro\nPokey", solidSpeed: 3, coarseSpeed: 4, liquidSpeed: 3, accel: 3, weight: 4, solidHandling: 2, coarseHandling: 4, liquidHandling: 2 }, { name: "Birdo\nPenguin", solidSpeed: 3, coarseSpeed: 3, liquidSpeed: 4, accel: 3, weight: 4, solidHandling: 2, coarseHandling: 2, liquidHandling: 4 }, { name: "Pauline\nSnowman\nPiranha Plant", solidSpeed: 5, coarseSpeed: 4, liquidSpeed: 4, accel: 2, weight: 5, solidHandling: 3, coarseHandling: 1, liquidHandling: 1 }, { name: "King Boo\nConkdor", solidSpeed: 4, coarseSpeed: 5, liquidSpeed: 4, accel: 2, weight: 5, solidHandling: 1, coarseHandling: 3, liquidHandling: 1 }, { name: "Rosalina\nCataquack", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 5, accel: 2, weight: 5, solidHandling: 1, coarseHandling: 1, liquidHandling: 3 }, { name: "Wario\nWiggler", solidSpeed: 6, coarseSpeed: 5, liquidSpeed: 5, accel: 1, weight: 6, solidHandling: 2, coarseHandling: 0, liquidHandling: 0 }, { name: "Cow\nDonkey Kong\nChargin' Chuck", solidSpeed: 5, coarseSpeed: 6, liquidSpeed: 5, accel: 1, weight: 6, solidHandling: 0, coarseHandling: 2, liquidHandling: 0 }, { name: "Waluigi\nPianta", solidSpeed: 5, coarseSpeed: 5, liquidSpeed: 6, accel: 1, weight: 6, solidHandling: 0, coarseHandling: 0, liquidHandling: 2 }, { name: "Bowser", solidSpeed: 6, coarseSpeed: 6, liquidSpeed: 6, accel: 0, weight: 7, solidHandling: 0, coarseHandling: 0, liquidHandling: 0 } ];
         const kartData = [ { name: "Mach Rocket\nR.O.B. H.O.G.", solidSpeed: 6, coarseSpeed: 1, liquidSpeed: 1, accel: 7, weight: 0, solidHandling: 10, coarseHandling: 6, liquidHandling: 6 }, { name: "Rally Bike\nHyper Pipe", solidSpeed: 0, coarseSpeed: 5, liquidSpeed: 0, accel: 8, weight: 0, solidHandling: 0, coarseHandling: 10, liquidHandling: 6 }, { name: "Fin Twin\nDolphin Dasher", solidSpeed: 0, coarseSpeed: 0, liquidSpeed: 5, accel: 8, weight: 0, solidHandling: 6, coarseHandling: 6, liquidHandling: 10 }, { name: "Baby Blooper", solidSpeed: 7, coarseSpeed: 2, liquidSpeed: 2, accel: 6, weight: 1, solidHandling: 9, coarseHandling: 5, liquidHandling: 5 }, { name: "Biddybuggy (Buggybud)", solidSpeed: 1, coarseSpeed: 6, liquidSpeed: 1, accel: 7, weight: null, solidHandling: 5, coarseHandling: 9, liquidHandling: 5 }, { name: "Roadster Royale\nB-Dasher\nHot Rod\nBumble V", solidSpeed: 8, coarseSpeed: 4, liquidSpeed: 4, accel: 4, weight: 3, solidHandling: 8, coarseHandling: 3, liquidHandling: 3 }, { name: "Zoom Buggy\nRally Kart", solidSpeed: 4, coarseSpeed: 8, liquidSpeed: 4, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 8, liquidHandling: 3 }, { name: "Cloud 9\nRibbit Revster\nCarpet Flyer", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 8, accel: 4, weight: 3, solidHandling: 3, coarseHandling: 3, liquidHandling: 8 }, { name: "Billdozer\nBig Horn", solidSpeed: 9, coarseSpeed: 6, liquidSpeed: 6, accel: 2, weight: 5, solidHandling: 7, coarseHandling: 1, liquidHandling: 1 }, { name: "Bowser Bruiser\nLi'l Dumpy\nTiny Titan (Rally Romper)\nChargin Truck", solidSpeed: 7, coarseSpeed: 10, liquidSpeed: 7, accel: 1, weight: 5, solidHandling: 1, coarseHandling: 7, liquidHandling: 1 }, { name: "Mecha Trike", solidSpeed: 7, coarseSpeed: 7, liquidSpeed: 10, accel: 1, weight: 5, solidHandling: 1, coarseHandling: 1, liquidHandling: 7 }, { name: "Rallygator", solidSpeed: 9, coarseSpeed: 6, liquidSpeed: 6, accel: 3, weight: 6, solidHandling: 5, coarseHandling: 0, liquidHandling: 0 }, { name: "Lobster Roller", solidSpeed: 7, coarseSpeed: 7, liquidSpeed: 10, accel: 2, weight: 6, solidHandling: 0, coarseHandling: 0, liquidHandling: 5 }, { name: "Standard Bike\nCute Scoot\nTune Thumper", solidSpeed: 1, coarseSpeed: 1, liquidSpeed: 1, accel: 9, weight: 0, solidHandling: 7, coarseHandling: 7, liquidHandling: 7 }, { name: "Pipe Frame", solidSpeed: 2, coarseSpeed: 2, liquidSpeed: 2, accel: 8, weight: 1, solidHandling: 6, coarseHandling: 6, liquidHandling: 6 }, { name: "Loco Moto", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 4, accel: 6, weight: 1, solidHandling: 6, coarseHandling: 6, liquidHandling: 6 }, { name: "Blastronaut III", solidSpeed: 5, coarseSpeed: 5, liquidSpeed: 5, accel: 6, weight: 3, solidHandling: 3, coarseHandling: 3, liquidHandling: 3 }, { name: "Standard Kart\nPlushbuggy", solidSpeed: 5, coarseSpeed: 5, liquidSpeed: 5, accel: 5, weight: 2, solidHandling: 5, coarseHandling: 5, liquidHandling: 5 }, { name: "W-Twin Chopper", solidSpeed: 7, coarseSpeed: 7, liquidSpeed: 7, accel: 3, weight: 2, solidHandling: 5, coarseHandling: 5, liquidHandling: 5 }, { name: "Reel Racer", solidSpeed: 8, coarseSpeed: 8, liquidSpeed: 8, accel: 2, weight: 3, solidHandling: 4, coarseHandling: 4, liquidHandling: 4 }, { name: "Junkyard Hog", solidSpeed: 8, coarseSpeed: 8, liquidSpeed: 8, accel: 3, weight: 4, solidHandling: 2, coarseHandling: 2, liquidHandling: 2 }, { name: "Funky Dorrie", solidSpeed: 4, coarseSpeed: 4, liquidSpeed: 8, accel: 5, weight: 5, solidHandling: 1, coarseHandling: 1, liquidHandling: 6 }, { name: "Dread Sled", solidSpeed: 3, coarseSpeed: 9, liquidSpeed: 5, accel: 3, weight: 3, solidHandling: 3, coarseHandling: 9, liquidHandling: 4 }, { name: "Stellar Sled", solidSpeed: 6, coarseSpeed: 8, liquidSpeed: 11, accel: 0, weight: 5, solidHandling: 1, coarseHandling: 2, liquidHandling: 8 } ];
 
-        // --- SCRIPT LOGIC (Unchanged, except for table generation) ---
+        // --- SCRIPT LOGIC ---
         const calculateBtn = document.getElementById('calculate-btn');
         const resultsTableDiv = document.getElementById('results-table');
         
-        // --- SLIDER LOGIC START ---
-        
-        // A map to store the 'old' values of sliders before they are changed.
+        // --- SLIDER LOGIC ---
         const lastValues = {};
 
+        function updateSliderFill(slider) {
+            const percent = (slider.value / slider.max) * 100;
+            slider.style.setProperty('--p', `${percent}%`);
+        }
+        
         function setupSliderGroup(ids) {
-            ids.forEach(id => {
-                const textInput = document.getElementById(id);
-                const slider = document.getElementById('slider-' + id);
+            const sliders = ids.map(id => document.getElementById('slider-' + id));
+            const textInputs = ids.map(id => document.getElementById(id));
 
-                // Initialize slider and last value from text input
-                const initialValue = parseFloat(textInput.value);
-                slider.value = initialValue;
-                lastValues[id] = initialValue;
+            sliders.forEach((slider, index) => {
+                const textInput = textInputs[index];
+                
+                // Initial sync and styling
+                lastValues[slider.id] = parseFloat(slider.value);
+                updateSliderFill(slider);
 
-                // Sync: Text Input -> Slider
+                // Sync from Text to Slider
                 textInput.addEventListener('input', () => {
                     let value = parseFloat(textInput.value) || 0;
-                    value = Math.max(0, Math.min(100, value)); // Clamp value
+                    value = Math.max(0, Math.min(100, value));
                     slider.value = value;
-                    lastValues[id] = value;
+                    updateSliderFill(slider);
                 });
 
-                // Store the old value on mousedown
-                slider.addEventListener('mousedown', () => {
-                    lastValues[id] = parseFloat(slider.value);
-                });
-
-                // Sync: Slider -> Text + Auto-balancing logic
-                slider.addEventListener('input', (event) => {
-                    const changedId = id;
-                    const newValue = parseFloat(event.target.value);
-                    const oldValue = lastValues[changedId];
+                // Sync from Slider to Text + Auto-balance
+                slider.addEventListener('input', () => {
+                    updateSliderFill(slider);
+                    const changedIndex = index;
+                    const newValue = parseFloat(slider.value);
+                    const oldValue = lastValues[slider.id];
                     const delta = newValue - oldValue;
                     
                     textInput.value = newValue.toFixed(1);
                     
-                    const otherIds = ids.filter(i => i !== changedId);
-                    const otherSum = otherIds.reduce((sum, i) => sum + lastValues[i], 0);
+                    const otherSliders = sliders.filter((_, i) => i !== changedIndex);
+                    const otherOldSum = otherSliders.reduce((sum, s) => sum + lastValues[s.id], 0);
 
-                    let totalCorrection = 0;
-                    otherIds.forEach(otherId => {
-                        const otherTextInput = document.getElementById(otherId);
-                        const otherSlider = document.getElementById('slider-' + otherId);
-                        
-                        let newOtherValue;
-                        if (otherSum > 0.1) {
-                            // Proportional distribution
-                            const proportion = lastValues[otherId] / otherSum;
-                            newOtherValue = lastValues[otherId] - (delta * proportion);
-                        } else {
-                            // Equal distribution if others were all zero
-                            newOtherValue = lastValues[otherId] - (delta / otherIds.length);
-                        }
-
-                        // Clamp values between 0 and 100
-                        newOtherValue = Math.max(0, Math.min(100, newOtherValue));
-                        
-                        // Update UI and store value for next iteration
-                        otherTextInput.value = newOtherValue.toFixed(1);
-                        otherSlider.value = newOtherValue;
-                        totalCorrection += newOtherValue;
-                    });
-                    
-                    // Final pass to ensure the sum is exactly 100 due to rounding
-                    const finalSum = newValue + totalCorrection;
-                    const error = 100 - finalSum;
-                    
-                    if (Math.abs(error) > 0.01) {
-                         const largestOtherId = otherIds
-                            .filter(i => parseFloat(document.getElementById(i).value) > 0)
-                            .sort((a, b) => parseFloat(document.getElementById(b).value) - parseFloat(document.getElementById(a).value))[0];
-
-                        if (largestOtherId) {
-                            const largestInput = document.getElementById(largestOtherId);
-                            const largestSlider = document.getElementById('slider-' + largestOtherId);
-                            let correctedVal = parseFloat(largestInput.value) + error;
-                            correctedVal = Math.max(0, Math.min(100, correctedVal));
-
-                            largestInput.value = correctedVal.toFixed(1);
-                            largestSlider.value = correctedVal;
-                        }
+                    // Prevent division by zero or weirdness when other sliders are all at 0
+                    if (otherOldSum < 0.01 && delta < 0) {
+                        lastValues[slider.id] = newValue;
+                        return;
                     }
 
+                    let runningSum = newValue;
+                    const newValues = [];
+
+                    // Calculate ideal new values for other sliders
+                    otherSliders.forEach(otherSlider => {
+                        const proportion = (otherOldSum > 0) ? (lastValues[otherSlider.id] / otherOldSum) : (1 / otherSliders.length);
+                        newValues.push(lastValues[otherSlider.id] - delta * proportion);
+                    });
+
+                    // Round all but the last one, and sum them up
+                    for (let i = 0; i < newValues.length - 1; i++) {
+                        let val = Math.max(0, Math.min(100, newValues[i]));
+                        val = Math.round(val * 10) / 10;
+                        newValues[i] = val;
+                        runningSum += val;
+                    }
+
+                    // The last slider absorbs all rounding errors to guarantee a sum of 100
+                    if (newValues.length > 0) {
+                        const lastVal = Math.max(0, Math.min(100, 100 - runningSum));
+                        newValues[newValues.length - 1] = Math.round(lastVal * 10) / 10;
+                    }
+
+                    // Apply the final, corrected values to the UI
+                    otherSliders.forEach((otherSlider, i) => {
+                        const finalValue = newValues[i];
+                        const otherTextInput = document.getElementById(otherSlider.id.replace('slider-', ''));
+                        otherSlider.value = finalValue;
+                        otherTextInput.value = finalValue.toFixed(1);
+                        updateSliderFill(otherSlider);
+                    });
+                    
                     // Update all lastValues for the next input event
-                    ids.forEach(i => {
-                        lastValues[i] = parseFloat(document.getElementById(i).value);
+                    sliders.forEach(s => {
+                        lastValues[s.id] = parseFloat(s.value);
                     });
                 });
             });
@@ -386,12 +426,10 @@
         setupSliderGroup(speedSubStatIds);
         setupSliderGroup(handlingSubStatIds);
         
-        // --- SLIDER LOGIC END ---
-
+        // --- MAIN CALCULATION LOGIC ---
         calculateBtn.addEventListener('click', calculateAndDisplayCombos);
-
         function getInputValue(id) { return parseFloat(document.getElementById(id).value) || 0; }
-        function validateWeights(ids, validationDivId) { const sum = ids.reduce((total, id) => total + getInputValue(id), 0); const validationDiv = document.getElementById(validationDivId); if (Math.abs(sum - 100) > 0.1) { validationDiv.textContent = `Error: Weights must add up to 100%. Current sum is ${sum.toFixed(1)}%.`; validationDiv.style.display = 'block'; return false; } validationDiv.style.display = 'none'; return true; }
+        function validateWeights(ids, validationDivId) { const sum = ids.reduce((total, id) => total + getInputValue(id), 0); const validationDiv = document.getElementById(validationDivId); if (Math.abs(sum - 100) > 0.01) { validationDiv.textContent = `Error: Weights must add up to 100%. Current sum is ${sum.toFixed(1)}%.`; validationDiv.style.display = 'block'; return false; } validationDiv.style.display = 'none'; return true; }
 
         function calculateAndDisplayCombos() {
             const isMainValid = validateWeights(mainStatIds, 'main-validation');
@@ -410,7 +448,9 @@
             resultsTableDiv.innerHTML = tableHTML;
         }
 
-        document.addEventListener('DOMContentLoaded', calculateAndDisplayCombos);
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateAndDisplayCombos();
+        });
     </script>
 </body>
 </html>
