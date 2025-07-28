@@ -21,7 +21,7 @@
             --text-light: #ecf0f1;
             --accent-gold: #ffe000;
             --fieldset-bg: #808080;
-            --slider-blue: #005f99; /* Darker blue for sliders */
+            --slider-blue: #005f99;
             --slider-track: #e9ecef;
         }
 
@@ -116,12 +116,12 @@
         .input-group {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px; /* CHANGED */
             margin-bottom: 12px;
         }
         
         .input-group label {
-            flex-basis: 120px;
+            flex-basis: 100px; /* CHANGED */
             flex-shrink: 0;
             line-height: 1.2;
             color: var(--text-light);
@@ -347,11 +347,9 @@
             sliders.forEach((slider, index) => {
                 const textInput = textInputs[index];
                 
-                // Initial sync and styling
                 lastValues[slider.id] = parseFloat(slider.value);
                 updateSliderFill(slider);
 
-                // Sync from Text to Slider
                 textInput.addEventListener('input', () => {
                     let value = parseFloat(textInput.value) || 0;
                     value = Math.max(0, Math.min(100, value));
@@ -359,7 +357,6 @@
                     updateSliderFill(slider);
                 });
 
-                // Sync from Slider to Text + Auto-balance
                 slider.addEventListener('input', () => {
                     updateSliderFill(slider);
                     const changedIndex = index;
@@ -372,7 +369,6 @@
                     const otherSliders = sliders.filter((_, i) => i !== changedIndex);
                     const otherOldSum = otherSliders.reduce((sum, s) => sum + lastValues[s.id], 0);
 
-                    // Prevent division by zero or weirdness when other sliders are all at 0
                     if (otherOldSum < 0.01 && delta < 0) {
                         lastValues[slider.id] = newValue;
                         return;
@@ -381,13 +377,11 @@
                     let runningSum = newValue;
                     const newValues = [];
 
-                    // Calculate ideal new values for other sliders
                     otherSliders.forEach(otherSlider => {
                         const proportion = (otherOldSum > 0) ? (lastValues[otherSlider.id] / otherOldSum) : (1 / otherSliders.length);
                         newValues.push(lastValues[otherSlider.id] - delta * proportion);
                     });
 
-                    // Round all but the last one, and sum them up
                     for (let i = 0; i < newValues.length - 1; i++) {
                         let val = Math.max(0, Math.min(100, newValues[i]));
                         val = Math.round(val * 10) / 10;
@@ -395,13 +389,11 @@
                         runningSum += val;
                     }
 
-                    // The last slider absorbs all rounding errors to guarantee a sum of 100
                     if (newValues.length > 0) {
                         const lastVal = Math.max(0, Math.min(100, 100 - runningSum));
                         newValues[newValues.length - 1] = Math.round(lastVal * 10) / 10;
                     }
 
-                    // Apply the final, corrected values to the UI
                     otherSliders.forEach((otherSlider, i) => {
                         const finalValue = newValues[i];
                         const otherTextInput = document.getElementById(otherSlider.id.replace('slider-', ''));
@@ -410,7 +402,6 @@
                         updateSliderFill(otherSlider);
                     });
                     
-                    // Update all lastValues for the next input event
                     sliders.forEach(s => {
                         lastValues[s.id] = parseFloat(s.value);
                     });
