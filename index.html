@@ -45,8 +45,9 @@
         }
 
         main {
-            max-width: 1600px; /* Increased max-width for the new layout */
+            max-width: 1600px;
             margin: 20px auto;
+            position: relative; /* Context for absolute positioning */
         }
 
         h1 {
@@ -68,18 +69,29 @@
             max-width: 800px;
             margin: 0 auto 40px auto;
         }
-
-        /* --- NEW: Grid Layout for main content --- */
-        .content-wrapper {
-            display: grid;
-            grid-template-columns: 2fr 1fr; /* Main content | Sidebar */
-            align-items: start;
-            gap: 40px;
+        
+        /* --- NEW: Layout with Absolute Positioning --- */
+        .calculator-column {
+            max-width: 1100px; /* Define the width of the main content */
+            margin: 0 auto; /* This centers it perfectly */
         }
 
-        @media (max-width: 1100px) {
-            .content-wrapper {
-                grid-template-columns: 1fr; /* Stack columns on smaller screens */
+        .sidebar-column {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px; /* Fixed width for the sidebar */
+        }
+        
+        /* Responsive fallback for the sidebar */
+        @media (max-width: 1600px) {
+            .sidebar-column {
+                position: relative; /* Put it back in the document flow */
+                top: auto;
+                right: auto;
+                width: auto;
+                max-width: 800px; /* Give it a reasonable max width */
+                margin: 0 auto; /* Center it */
             }
         }
 
@@ -121,7 +133,7 @@
             padding: 30px 40px;
         }
 
-        /* --- NEW: Limitations Panel Styling --- */
+        /* --- Limitations Panel Styling --- */
         .limitations-content {
             font-size: 0.95em;
             line-height: 1.7;
@@ -164,110 +176,21 @@
             margin-bottom: 20px;
         }
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        
-        .input-group label {
-            flex-basis: 100px;
-            flex-shrink: 0;
-            line-height: 1.2;
-            color: var(--text-light);
-        }
-        
-        .input-group input[type="number"] {
-            flex-basis: 55px;
-            flex-shrink: 0;
-            font-family: 'Lexend', sans-serif;
-            padding: 8px;
-            background-color: #fff;
-            border: 1px solid #ced4da;
-            color: var(--text-dark);
-            border-radius: 8px;
-            text-align: right;
-            font-size: 1em;
-        }
-
-        .input-group span {
-            color: var(--text-light);
-        }
+        .input-group { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .input-group label { flex-basis: 100px; flex-shrink: 0; line-height: 1.2; color: var(--text-light); }
+        .input-group input[type="number"] { flex-basis: 55px; flex-shrink: 0; font-family: 'Lexend', sans-serif; padding: 8px; background-color: #fff; border: 1px solid #ced4da; color: var(--text-dark); border-radius: 8px; text-align: right; font-size: 1em; }
+        .input-group span { color: var(--text-light); }
 
         /* --- Slider Styling --- */
-        input[type="range"] {
-            flex-grow: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 8px;
-            background: var(--panel-bg);
-            border-radius: 5px;
-            outline: none;
-        }
+        input[type="range"] { flex-grow: 1; -webkit-appearance: none; appearance: none; width: 100%; height: 8px; background: var(--panel-bg); border-radius: 5px; outline: none; }
+        input[type="range"]::-webkit-slider-runnable-track { height: 8px; border-radius: 5px; background: linear-gradient(to right, var(--slider-blue) var(--p, 0%), var(--panel-bg) var(--p, 0%)); }
+        input[type="range"]::-moz-range-track { height: 8px; border-radius: 5px; background: var(--panel-bg); }
+        input[type="range"]::-moz-range-progress { height: 8px; border-radius: 5px; background: var(--slider-blue); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -6px; width: 20px; height: 20px; background: #fff; border: 3px solid var(--text-dark); border-radius: 50%; cursor: pointer; }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: #fff; border: 3px solid var(--text-dark); border-radius: 50%; cursor: pointer; }
 
-        input[type="range"]::-webkit-slider-runnable-track {
-            height: 8px;
-            border-radius: 5px;
-            background: linear-gradient(to right, var(--slider-blue) var(--p, 0%), var(--panel-bg) var(--p, 0%));
-        }
-
-        input[type="range"]::-moz-range-track {
-            height: 8px;
-            border-radius: 5px;
-            background: var(--panel-bg);
-        }
-
-        input[type="range"]::-moz-range-progress {
-            height: 8px;
-            border-radius: 5px;
-            background: var(--slider-blue);
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            margin-top: -6px;
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border: 3px solid var(--text-dark);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border: 3px solid var(--text-dark);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        #calculate-btn {
-            font-family: 'Flying Leatherneck', sans-serif;
-            width: 100%;
-            padding: 14px 20px;
-            font-size: 2.3em;
-            font-weight: 700;
-            color: var(--text-light);
-            text-shadow: 3.00px 0.00px 0 #888, 2.77px 1.15px 0 #888, 2.12px 2.12px 0 #888, 1.15px 2.77px 0 #888, 0.00px 3.00px 0 #888, -1.15px 2.77px 0 #888, -2.12px 2.12px 0 #888, -2.77px 1.15px 0 #888, -3.00px 0.00px 0 #888, -2.77px -1.15px 0 #888, -2.12px -2.12px 0 #888, -1.15px -2.77px 0 #888, 0.00px -3.00px 0 #888, 1.15px -2.77px 0 #888, 2.12px -2.12px 0 #888, 2.77px -1.15px 0 #888;
-            background-color: #888;
-            border: none;
-            border-radius: 48px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            top: 5px;
-        }
-        
-        #calculate-btn:hover {
-            background-color: var(--accent-gold);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 168, 232, 0.3);
-        }
+        #calculate-btn { font-family: 'Flying Leatherneck', sans-serif; width: 100%; padding: 14px 20px; font-size: 2.3em; font-weight: 700; color: var(--text-light); text-shadow: 3.00px 0.00px 0 #888, 2.77px 1.15px 0 #888, 2.12px 2.12px 0 #888, 1.15px 2.77px 0 #888, 0.00px 3.00px 0 #888, -1.15px 2.77px 0 #888, -2.12px 2.12px 0 #888, -2.77px 1.15px 0 #888, -3.00px 0.00px 0 #888, -2.77px -1.15px 0 #888, -2.12px -2.12px 0 #888, -1.15px -2.77px 0 #888, 0.00px -3.00px 0 #888, 1.15px -2.77px 0 #888, 2.12px -2.12px 0 #888, 2.77px -1.15px 0 #888; background-color: #888; border: none; border-radius: 48px; cursor: pointer; transition: all 0.3s ease; position: relative; top: 5px; }
+        #calculate-btn:hover { background-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 168, 232, 0.3); }
 
         /* --- Table & Other Styles --- */
         .validation-message { color: #e74c3c; font-weight: bold; text-align: center; margin-top: 10px; display: none; }
@@ -288,9 +211,8 @@
         <h1>Mario Kart World Combo Calculator</h1>
         <p class="subtitle">Use the sliders for quick, auto-balanced adjustments, or type directly into the boxes for precise values. Stats must add up to 100%.</p>
 
-        <!-- NEW: Wrapper for the grid layout -->
+        <!-- Wrapper for the new layout -->
         <div class="content-wrapper">
-            <!-- Column 1: The main calculator -->
             <div class="calculator-column">
                 <div class="panel">
                     <div class="panel-header">
@@ -381,7 +303,6 @@
                 </div>
             </div> <!-- End calculator-column -->
             
-            <!-- Column 2: The new sidebar -->
             <div class="sidebar-column">
                 <div class="panel">
                     <div class="panel-header">
